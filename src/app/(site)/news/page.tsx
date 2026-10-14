@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { ArticleCard } from "@/components/cards";
 import { EmptyState, PageHeader } from "@/components/ui";
+import { pageMetadata } from "@/lib/seo";
 import { getNews } from "@/sanity/data";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "News",
   description: "Green Lantern news and coverage across TV, film and comics.",
-};
+  path: "/news",
+});
 
 export default async function NewsPage() {
   const articles = await getNews();

@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticleCard } from "@/components/cards";
+import { JsonLd } from "@/components/JsonLd";
 import { RichText } from "@/components/RichText";
 import { Socials } from "@/components/Socials";
 import { Thumb } from "@/components/Thumb";
 import { EmptyState, SectionTitle } from "@/components/ui";
+import { absoluteUrl, describe, organizationId, pageMetadata, shareImage } from "@/lib/seo";
 import { getAuthorPage, getAuthorSlugs } from "@/sanity/data";
+import type { Author } from "@/sanity/types";
 
 export const revalidate = 60;
 
@@ -20,7 +23,34 @@ export async function generateMetadata({
   const { slug } = await params;
   const { author } = await getAuthorPage(slug);
   if (!author) return {};
-  return { title: author.name, description: author.bioText?.split("\n")[0] };
+  return pageMetadata({
+    type: "profile",
+    title: author.name,
+    description: describe(author.bioText, author.role ? `${author.role} at Green Lantern Watch.` : undefined),
+    path: `/authors/${slug}`,
+    image: author.avatar,
+    imageFit: "fill",
+  });
+}
+
+function authorJsonLd(author: Author) {
+  const url = absoluteUrl(`/authors/${author.slug}`);
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url,
+    mainEntity: {
+      "@type": "Person",
+      "@id": `${url}#person`,
+      name: author.name,
+      url,
+      jobTitle: author.role,
+      description: describe(author.bioText),
+      image: author.avatar?.asset ? shareImage(author.avatar, author.name, "fill").url : undefined,
+      sameAs: Object.values(author.socials ?? {}).filter(Boolean),
+      worksFor: { "@id": organizationId },
+    },
+  };
 }
 
 export default async function AuthorPage({ params }: PageProps<"/authors/[slug]">) {
@@ -30,6 +60,7 @@ export default async function AuthorPage({ params }: PageProps<"/authors/[slug]"
 
   return (
     <>
+      <JsonLd data={authorJsonLd(author)} />
       <header className="mb-12 flex max-w-3xl flex-col gap-6 sm:flex-row sm:items-start">
         {author.avatar?.asset ? (
           <Thumb

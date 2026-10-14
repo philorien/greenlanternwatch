@@ -126,8 +126,10 @@ export const CATEGORY_SLUGS_QUERY = defineQuery(/* groq */ `
 export const ARTICLE_QUERY = defineQuery(/* groq */ `
   *[_type == "article" && slug.current == $slug][0]{
     ${articleSummary},
+    _updatedAt,
     mainImage { asset, hotspot, alt, caption, credit },
     ${richText("body")},
+    "lead": pt::text(body[_type == "block" && style == "normal"][0...2]),
     tags,
     "related": *[_type == "article" && defined(slug.current) && _id != ^._id
         && category._ref == ^.category._ref]
@@ -171,6 +173,7 @@ export const COMICS_HUB_QUERY = defineQuery(/* groq */ `{
 export const READING_ORDER_QUERY = defineQuery(/* groq */ `
   *[_type == "readingOrder" && slug.current == $slug][0]{
     _id, title, "slug": slug.current, audience, tagline, ${richText("intro")},
+    "lead": pt::text(intro[_type == "block" && style == "normal"][0...2]),
     sections[]{ _key, title, note, entries[]{ ${readingEntry} } }
   }
 `);
@@ -183,6 +186,7 @@ export const STORY_ARC_QUERY = defineQuery(/* groq */ `
   *[_type == "storyArc" && slug.current == $slug][0]{
     ${arcSummary},
     ${richText("summary")},
+    "lead": pt::text(summary[_type == "block" && style == "normal"][0...2]),
     readingList[]{ ${readingEntry} },
     "characters": characters[]->{ ${characterSummary} },
     "corps": corps[]->{ ${corpsSummary} }
@@ -204,6 +208,7 @@ export const CHARACTER_QUERY = defineQuery(/* groq */ `
   *[_type == "character" && slug.current == $slug][0]{
     ${characterSummary},
     ${richText("bio")},
+    "lead": pt::text(bio[_type == "block" && style == "normal"][0...2]),
     species,
     homeSector,
     firstAppearance,
@@ -236,6 +241,7 @@ export const CORPS_QUERY = defineQuery(/* groq */ `
     "keyFigureCharacters": *[_type == "character" && defined(slug.current)
       && (name in ^.keyFigures || alias in ^.keyFigures)]{ name, alias, "slug": slug.current },
     ${richText("description")},
+    "lead": pt::text(description[_type == "block" && style == "normal"][0...2]),
     "storylines": *[_type == "storyArc" && ^._id in corps[]._ref]
       | order(startYear asc){ ${arcSummary} },
     "members": *[_type == "character" && corps._ref == ^._id]
@@ -245,6 +251,15 @@ export const CORPS_QUERY = defineQuery(/* groq */ `
 
 export const CORPS_SLUGS_QUERY = defineQuery(/* groq */ `
   *[_type == "corps" && defined(slug.current)]{ "slug": slug.current }
+`);
+
+export const SITEMAP_QUERY = defineQuery(/* groq */ `
+  *[_type in ["article", "character", "storyArc", "readingOrder", "corps", "category", "author"]
+      && defined(slug.current) && !(_id in path("drafts.**"))]{
+    _type,
+    "slug": slug.current,
+    "updatedAt": _updatedAt
+  }
 `);
 
 export const SEARCH_QUERY = defineQuery(/* groq */ `

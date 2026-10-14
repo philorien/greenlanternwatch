@@ -3,9 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fragment } from "react";
 import { CharacterCard, StoryArcCard } from "@/components/cards";
+import { JsonLd } from "@/components/JsonLd";
 import { CorpsSymbol } from "@/components/Logo";
 import { RichText } from "@/components/RichText";
 import { BackLink, EmptyState, SectionTitle } from "@/components/ui";
+import { breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo";
 import { getCorps, getCorpsSlugs } from "@/sanity/data";
 
 export const revalidate = 60;
@@ -21,7 +23,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const corps = await getCorps(slug);
   if (!corps) return {};
-  return { title: corps.name, description: corps.tagline };
+  return pageMetadata({
+    title: corps.name,
+    description: describe(
+      corps.tagline ? `${corps.emotion}. ${corps.tagline}` : undefined,
+      corps.lead,
+    ),
+    path: `/corps/${slug}`,
+  });
 }
 
 export default async function CorpsPage({ params }: PageProps<"/corps/[slug]">) {
@@ -31,6 +40,12 @@ export default async function CorpsPage({ params }: PageProps<"/corps/[slug]">) 
 
   return (
     <div data-spectrum={corps.spectrum} className="mx-auto max-w-4xl">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "The emotional spectrum", path: "/corps" },
+          { name: corps.name, path: `/corps/${corps.slug}` },
+        ])}
+      />
       <BackLink href="/corps">The emotional spectrum</BackLink>
       <div className="mt-6 flex items-center gap-6">
         <div className="min-w-0 flex-1">

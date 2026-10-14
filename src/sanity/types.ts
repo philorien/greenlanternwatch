@@ -69,7 +69,9 @@ export type ComicIssue = {
 };
 
 export type Article = ArticleSummary & {
+  _updatedAt?: string;
   body?: PortableTextBlock[];
+  lead?: string;
   tags?: string[];
   related?: ArticleSummary[];
 };
@@ -146,11 +148,13 @@ export type ReadingOrderSummary = {
 
 export type ReadingOrder = ReadingOrderSummary & {
   intro?: PortableTextBlock[];
+  lead?: string;
   sections?: ReadingSection[];
 };
 
 export type StoryArc = StoryArcSummary & {
   summary?: PortableTextBlock[];
+  lead?: string;
   readingList?: ReadingEntry[];
   characters?: CharacterSummary[];
   corps?: CorpsSummary[];
@@ -174,6 +178,7 @@ export type KeyIssue = {
 
 export type Character = CharacterSummary & {
   bio?: PortableTextBlock[];
+  lead?: string;
   species?: string;
   homeSector?: string;
   firstAppearance?: string;
@@ -195,6 +200,7 @@ export type Corps = CorpsSummary & {
   keyFigures?: string[];
   keyFigureCharacters?: { name: string; alias?: string; slug: string }[];
   description?: PortableTextBlock[];
+  lead?: string;
   storylines?: StoryArcSummary[];
   members?: CharacterSummary[];
 };
@@ -213,6 +219,12 @@ export type ComicsHubData = {
   arcs: StoryArcSummary[];
   keyIssues: KeyIssue[];
   coverage: ArticleSummary[];
+};
+
+export type SitemapEntry = {
+  _type: "article" | "character" | "storyArc" | "readingOrder" | "corps" | "category" | "author";
+  slug: string;
+  updatedAt?: string;
 };
 
 export type SearchHit = {

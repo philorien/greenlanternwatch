@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { KeyIssueCard, StoryArcCard } from "@/components/cards";
+import { JsonLd } from "@/components/JsonLd";
 import { RichText } from "@/components/RichText";
 import { Thumb } from "@/components/Thumb";
 import { BackLink, SectionTitle, SpectrumDot, Tag } from "@/components/ui";
+import { breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo";
 import { getCharacter, getCharacterSlugs } from "@/sanity/data";
+import type { Character } from "@/sanity/types";
 
 export const revalidate = 60;
 
@@ -28,12 +31,28 @@ export async function generateMetadata({
   const { slug } = await params;
   const character = await getCharacter(slug);
   if (!character) return {};
-  return {
+  return pageMetadata({
+    type: "profile",
     title: character.name,
-    description: character.alias
-      ? `${character.name}, also known as ${character.alias}.`
-      : undefined,
-  };
+    description: characterDescription(character),
+    path: `/characters/${slug}`,
+    image: character.portrait,
+    imageFit: "fill",
+  });
+}
+
+function characterDescription(c: Character) {
+  const name = c.alias ? `${c.name} (${c.alias})` : c.name;
+  const identity = [c.species, c.corps ? `member of the ${c.corps.name}` : null]
+    .filter(Boolean)
+    .join(", ");
+  const facts = [
+    identity ? `${name}: ${identity}.` : null,
+    c.firstAppearance ? `First appearance: ${c.firstAppearance.trim()}.` : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  return describe(c.lead, facts);
 }
 
 export default async function CharacterPage({
@@ -52,6 +71,12 @@ export default async function CharacterPage({
 
   return (
     <div className="mx-auto max-w-4xl">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Characters", path: "/characters" },
+          { name: c.name, path: `/characters/${c.slug}` },
+        ])}
+      />
       <BackLink href="/characters">All characters</BackLink>
       <div className="mt-6 flex flex-col gap-8 sm:flex-row">
         <Thumb

@@ -9,15 +9,17 @@ import {
 } from "@/components/cards";
 import { Wordmark } from "@/components/Logo";
 import { EmptyState, PageHeader, SectionTitle } from "@/components/ui";
+import { pageMetadata } from "@/lib/seo";
 import { getComicsHub } from "@/sanity/data";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Comics guide",
   description:
     "The Book of Oa: reading orders, story arc hubs, key issues and new-release coverage for Green Lantern comics.",
-};
+  path: "/comics",
+});
 
 export default async function ComicsPage() {
   const { orders, arcs, keyIssues, coverage } = await getComicsHub();

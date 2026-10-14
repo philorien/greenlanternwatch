@@ -3,8 +3,11 @@ import { notFound } from "next/navigation";
 import { Wordmark, type WordmarkVariant } from "@/components/Logo";
 import { ComicVineCredit, ReadingList } from "@/components/ReadingList";
 import { RichText } from "@/components/RichText";
+import { JsonLd } from "@/components/JsonLd";
 import { BackLink, PageHeader } from "@/components/ui";
+import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo";
 import { getReadingOrder, getReadingOrderSlugs } from "@/sanity/data";
+import type { ReadingOrder } from "@/sanity/types";
 
 export const revalidate = 60;
 
@@ -23,7 +26,30 @@ export async function generateMetadata({
   const { slug } = await params;
   const order = await getReadingOrder(slug);
   if (!order) return {};
-  return { title: order.title, description: order.tagline };
+  return pageMetadata({
+    title: order.title,
+    description: describe(order.tagline, order.lead),
+    path: `/comics/reading-orders/${slug}`,
+  });
+}
+
+function readingOrderJsonLd(order: ReadingOrder) {
+  const entries = order.sections?.flatMap((s) => s.entries ?? []) ?? [];
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: order.title,
+    description: describe(order.tagline, order.lead),
+    url: absoluteUrl(`/comics/reading-orders/${order.slug}`),
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: entries.length,
+    itemListElement: entries.map((entry, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: entry.issues ? `${entry.title}, ${entry.issues}` : entry.title,
+      ...(entry.arc ? { url: absoluteUrl(`/comics/arcs/${entry.arc.slug}`) } : {}),
+    })),
+  };
 }
 
 export default async function ReadingOrderPage({
@@ -38,6 +64,15 @@ export default async function ReadingOrderPage({
 
   return (
     <div className="mx-auto max-w-3xl">
+      <JsonLd
+        data={[
+          readingOrderJsonLd(order),
+          breadcrumbJsonLd([
+            { name: "Comics guide", path: "/comics" },
+            { name: order.title, path: `/comics/reading-orders/${order.slug}` },
+          ]),
+        ]}
+      />
       <BackLink href="/comics">Comics guide</BackLink>
       {wordmark ? <Wordmark variant={wordmark} className="mt-8 w-full max-w-xs" /> : null}
       <div className="mt-6">

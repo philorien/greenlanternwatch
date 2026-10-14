@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { DemoBanner } from "@/components/DemoBanner";
@@ -11,6 +12,8 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
         {children}
       </main>
       <SiteFooter />
+      {/* Here rather than the root layout so /studio visits are not counted. */}
+      <Analytics />
     </>
   );
 }

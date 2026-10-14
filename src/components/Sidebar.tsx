@@ -46,8 +46,12 @@ const categoryOrder = ["comics", "movies-tv", "characters", "features", "reviews
 
 export function CategoriesPanel({ categories }: { categories: CategoryItem[] }) {
   if (categories.length === 0) return null;
-  const hrefFor = (slug: string) =>
-    slug === "comics" ? "/comics" : slug === "characters" ? "/characters" : `/category/${slug}`;
+  const hrefFor = (slug: string) => {
+    if (slug === "comics") return "/comics";
+    if (slug === "movies-tv") return "/movies-tv";
+    if (slug === "characters") return "/characters";
+    return `/category/${slug}`;
+  };
   const sorted = [...categories].sort(
     (a, b) =>
       (categoryOrder.indexOf(a.slug) + 1 || 99) - (categoryOrder.indexOf(b.slug) + 1 || 99),

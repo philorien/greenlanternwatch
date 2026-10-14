@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArticleCard, ComicIssueCard } from "@/components/cards";
 import { HeroCarousel, type HeroSlide } from "@/components/HeroCarousel";
 import {
@@ -7,11 +8,21 @@ import {
   SocialsPanel,
   StartHerePanel,
 } from "@/components/Sidebar";
+import { JsonLd } from "@/components/JsonLd";
 import { EmptyState, SectionTitle } from "@/components/ui";
+import { site } from "@/config/site";
+import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { getHome } from "@/sanity/data";
 import { focalPoint, urlFor } from "@/sanity/image";
 
 export const revalidate = 60;
+
+export const metadata: Metadata = pageMetadata({
+  title: { absolute: `${site.name}: ${site.tagline}` },
+  description:
+    "Green Lantern news, reading orders and character profiles across the comics, the Lanterns TV show and the films, written by fans for new and longtime readers.",
+  path: "/",
+});
 
 export default async function HomePage() {
   const data = await getHome();
@@ -35,6 +46,10 @@ export default async function HomePage() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem]">
+      <JsonLd data={siteJsonLd()} />
+      <h1 className="sr-only">
+        {site.name}: Green Lantern news, comics reading orders and character guides
+      </h1>
       <div className="min-w-0 space-y-12">
         {slides.length > 0 ? (
           <HeroCarousel slides={slides} />

@@ -1,4 +1,11 @@
-export type LinkableType = "article" | "character" | "storyArc" | "readingOrder" | "corps";
+export type LinkableType =
+  | "article"
+  | "character"
+  | "storyArc"
+  | "readingOrder"
+  | "corps"
+  | "category"
+  | "author";
 
 export function pathFor(type: LinkableType, slug: string) {
   switch (type) {
@@ -12,5 +19,9 @@ export function pathFor(type: LinkableType, slug: string) {
       return `/comics/reading-orders/${slug}`;
     case "corps":
       return `/corps/${slug}`;
+    case "category":
+      return `/category/${slug}`;
+    case "author":
+      return `/authors/${slug}`;
   }
 }

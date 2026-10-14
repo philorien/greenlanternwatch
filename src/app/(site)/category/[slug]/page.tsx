@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticleCard } from "@/components/cards";
 import { EmptyState, PageHeader } from "@/components/ui";
+import { describe, pageMetadata } from "@/lib/seo";
 import { getCategoryPage, getCategorySlugs } from "@/sanity/data";
 
 export const revalidate = 60;
@@ -17,7 +18,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const { category } = await getCategoryPage(slug);
   if (!category) return {};
-  return { title: category.title, description: category.description };
+  return pageMetadata({
+    title: category.title,
+    description: describe(category.description, `Green Lantern ${category.title.toLowerCase()} from Green Lantern Watch.`),
+    path: `/category/${slug}`,
+  });
 }
 
 export default async function CategoryPage({ params }: PageProps<"/category/[slug]">) {

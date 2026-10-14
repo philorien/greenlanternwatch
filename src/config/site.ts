@@ -1,11 +1,12 @@
 export const site = {
   name: "Green Lantern Watch",
   tagline: "Your Sector for All Things Green Lantern",
-  url: "https://greenlanternwatch.com",
+  // Must match the domain Vercel serves; the apex redirects here.
+  url: "https://www.greenlanternwatch.com",
   nav: [
     { href: "/news", label: "News" },
     { href: "/comics", label: "Comics" },
-    { href: "/category/movies-tv", label: "Movies & TV" },
+    { href: "/movies-tv", label: "Movies & TV" },
     { href: "/characters", label: "Characters" },
     { href: "/category/features", label: "Features" },
     { href: "/category/reviews", label: "Reviews" },

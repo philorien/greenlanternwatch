@@ -4,13 +4,15 @@ import { CorpsSymbol, Wordmark } from "@/components/Logo";
 import { Socials } from "@/components/Socials";
 import { PageHeader } from "@/components/ui";
 import { site } from "@/config/site";
+import { pageMetadata } from "@/lib/seo";
 import type { SpectrumColor } from "@/sanity/types";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
   description:
     "Green Lantern Watch is an unofficial, fan-run guide to Green Lantern across comics, TV and film: news, reviews, reading orders and a database of the Lanterns and Corps.",
-};
+  path: "/about",
+});
 
 const sections = [
   {
@@ -22,6 +24,11 @@ const sections = [
     href: "/comics",
     title: "The Book of Oa",
     description: "Our comics guide: reading orders, story arc hubs and the key issues worth tracking down.",
+  },
+  {
+    href: "/movies-tv",
+    title: "Movies & TV",
+    description: "Films and shows built around a Green Lantern, and the ones where a Lantern appears.",
   },
   {
     href: "/characters",

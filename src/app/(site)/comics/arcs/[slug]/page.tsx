@@ -5,8 +5,11 @@ import { Wordmark, type WordmarkVariant } from "@/components/Logo";
 import { ComicVineCredit, ReadingList } from "@/components/ReadingList";
 import { RichText } from "@/components/RichText";
 import { Thumb } from "@/components/Thumb";
+import { JsonLd } from "@/components/JsonLd";
 import { BackLink, SectionTitle } from "@/components/ui";
+import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo";
 import { getStoryArc, getStoryArcSlugs } from "@/sanity/data";
+import type { StoryArc } from "@/sanity/types";
 
 export const revalidate = 60;
 
@@ -25,7 +28,31 @@ export async function generateMetadata({
   const { slug } = await params;
   const arc = await getStoryArc(slug);
   if (!arc) return {};
-  return { title: arc.title, description: arc.tagline };
+  return pageMetadata({
+    title: arc.title,
+    description: describe(arc.tagline, arc.lead),
+    path: `/comics/arcs/${slug}`,
+    image: arc.cover,
+    imageFit: "fill",
+  });
+}
+
+function storyArcJsonLd(arc: StoryArc) {
+  const entries = arc.readingList ?? [];
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${arc.title} reading list`,
+    description: describe(arc.tagline, arc.lead),
+    url: absoluteUrl(`/comics/arcs/${arc.slug}`),
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: entries.length,
+    itemListElement: entries.map((entry, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: entry.issues ? `${entry.title}, ${entry.issues}` : entry.title,
+    })),
+  };
 }
 
 export default async function StoryArcPage({
@@ -45,6 +72,15 @@ export default async function StoryArcPage({
 
   return (
     <div className="mx-auto max-w-4xl">
+      <JsonLd
+        data={[
+          ...(arc.readingList?.length ? [storyArcJsonLd(arc)] : []),
+          breadcrumbJsonLd([
+            { name: "Comics guide", path: "/comics" },
+            { name: arc.title, path: `/comics/arcs/${arc.slug}` },
+          ]),
+        ]}
+      />
       <BackLink href="/comics">Comics guide</BackLink>
       <div className="mt-6 flex flex-col gap-8 sm:flex-row">
         <Thumb

@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CharacterCard } from "@/components/cards";
 import { EmptyState, PageHeader, SectionTitle, SpectrumDot } from "@/components/ui";
+import { pageMetadata } from "@/lib/seo";
 import { getCharacters } from "@/sanity/data";
 import type { CharacterSummary } from "@/sanity/types";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Characters and Corps",
   description:
     "The Great Spectrum Database: profiles of Earth's Lanterns, alien Lanterns and every Corps on the emotional spectrum.",
-};
+  path: "/characters",
+});
 
 const sections: { value: CharacterSummary["section"]; title: string }[] = [
   { value: "earth", title: "Earth's Green Lanterns (Sector 2814)" },

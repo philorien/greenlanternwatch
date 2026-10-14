@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { CorpsCard } from "@/components/cards";
 import { EmptyState, PageHeader } from "@/components/ui";
+import { pageMetadata } from "@/lib/seo";
 import { getCorpsList } from "@/sanity/data";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "The emotional spectrum",
   description: "Every Corps on the emotional spectrum, and what powers each one.",
-};
+  path: "/corps",
+});
 
 export default async function CorpsIndexPage() {
   const corps = await getCorpsList();

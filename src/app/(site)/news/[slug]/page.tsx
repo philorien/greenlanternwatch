@@ -2,10 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleCard, formatDate } from "@/components/cards";
+import { JsonLd } from "@/components/JsonLd";
 import { RichText } from "@/components/RichText";
 import { Thumb } from "@/components/Thumb";
 import { BackLink, SectionTitle, Tag } from "@/components/ui";
+import {
+  absoluteUrl,
+  breadcrumbJsonLd,
+  describe,
+  organizationId,
+  pageMetadata,
+  shareImage,
+} from "@/lib/seo";
 import { getArticle, getArticleSlugs } from "@/sanity/data";
+import type { Article } from "@/sanity/types";
 
 export const revalidate = 60;
 
@@ -20,10 +30,44 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = await getArticle(slug);
   if (!article) return {};
-  return {
+  return pageMetadata({
+    type: "article",
     title: article.title,
-    description: article.excerpt,
-    openGraph: { type: "article", publishedTime: article.publishedAt },
+    description: describe(article.excerpt, article.lead),
+    path: `/news/${slug}`,
+    image: article.mainImage,
+    publishedTime: article.publishedAt,
+    modifiedTime: article._updatedAt,
+    authors: article.author ? [absoluteUrl(`/authors/${article.author.slug}`)] : undefined,
+    section: article.category?.title,
+    tags: article.tags,
+  });
+}
+
+function articleJsonLd(article: Article) {
+  const url = absoluteUrl(`/news/${article.slug}`);
+  return {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "@id": `${url}#article`,
+    mainEntityOfPage: url,
+    headline: article.title,
+    description: describe(article.excerpt, article.lead),
+    image: article.mainImage?.asset ? [shareImage(article.mainImage).url] : undefined,
+    datePublished: article.publishedAt,
+    dateModified: article._updatedAt ?? article.publishedAt,
+    articleSection: article.category?.title,
+    keywords: article.tags,
+    author: article.author
+      ? {
+          "@type": "Person",
+          name: article.author.name,
+          url: absoluteUrl(`/authors/${article.author.slug}`),
+        }
+      : { "@id": organizationId },
+    publisher: { "@id": organizationId },
+    isAccessibleForFree: true,
+    inLanguage: "en",
   };
 }
 
@@ -34,6 +78,18 @@ export default async function ArticlePage({ params }: PageProps<"/news/[slug]">)
 
   return (
     <article>
+      <JsonLd
+        data={[
+          articleJsonLd(article),
+          breadcrumbJsonLd([
+            { name: "News", path: "/news" },
+            ...(article.category
+              ? [{ name: article.category.title, path: `/category/${article.category.slug}` }]
+              : []),
+            { name: article.title, path: `/news/${article.slug}` },
+          ]),
+        ]}
+      />
       <div className="mx-auto max-w-3xl">
         <BackLink href="/news">All news</BackLink>
         <header className="mt-6 mb-8">

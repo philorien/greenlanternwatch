@@ -2,13 +2,8 @@ import type { Metadata } from "next";
 import "@fontsource-variable/archivo";
 import "@fontsource-variable/inter";
 import { site } from "@/config/site";
+import { defaultShareImage, siteUrl } from "@/lib/seo";
 import "./globals.css";
-
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.NODE_ENV === "production"
-    ? site.url
-    : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -20,9 +15,11 @@ export const metadata: Metadata = {
     "Green Lantern Watch covers the TV show, movies and comics, with news, a comics reading guide and character profiles.",
   openGraph: {
     siteName: site.name,
+    locale: "en_US",
     type: "website",
-    url: siteUrl,
+    images: [defaultShareImage],
   },
+  twitter: { card: "summary_large_image", images: [defaultShareImage] },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

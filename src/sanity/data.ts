@@ -28,6 +28,7 @@ import type {
   HomeData,
   ReadingOrder,
   SearchHit,
+  SitemapEntry,
   StoryArc,
 } from "./types";
 
@@ -289,6 +290,24 @@ export async function getCorps(slug: string): Promise<Corps | null> {
 
 export const getCorpsSlugs = () =>
   fetchList<{ slug: string }[]>(q.CORPS_SLUGS_QUERY, {}, [], demoCorps.map((k) => ({ slug: k.slug })), ["corps"]);
+
+/* Sitemap */
+
+export const getSitemapEntries = () =>
+  fetchList<SitemapEntry[]>(
+    q.SITEMAP_QUERY,
+    {},
+    [],
+    [
+      ...demoArticles.map((a) => ({ _type: "article" as const, slug: a.slug, updatedAt: a.publishedAt })),
+      ...demoCharacters.map((c) => ({ _type: "character" as const, slug: c.slug })),
+      ...demoArcs.map((a) => ({ _type: "storyArc" as const, slug: a.slug })),
+      ...demoOrders.map((o) => ({ _type: "readingOrder" as const, slug: o.slug })),
+      ...demoCorps.map((k) => ({ _type: "corps" as const, slug: k.slug })),
+      ...demoCategories.map((c) => ({ _type: "category" as const, slug: c.slug })),
+    ],
+    ["article", "character", "storyArc", "readingOrder", "corps", "category", "author"],
+  );
 
 /* Search */
 
