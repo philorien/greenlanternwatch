@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Green Lantern Fan Site
 
-## Getting Started
+Next.js (App Router) + Tailwind CSS v4 + Sanity + Vercel.
 
-First, run the development server:
+Content: news articles, a tiered comics reading guide, and character and Corps profiles. Sanity Studio is embedded at `/studio`.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## First-time setup
+
+1. Create a Sanity project and dataset (from this folder):
+
+   ```bash
+   npx sanity login
+   npx sanity init --env --create-project "Green Lantern Fan Site" --dataset production
+   ```
+
+   If `init` tries to scaffold files, decline. You only need the project ID.
+
+2. Create `.env.local` from `.env.example` and fill in the project ID:
+
+   ```
+   NEXT_PUBLIC_SANITY_PROJECT_ID=<your project id>
+   NEXT_PUBLIC_SANITY_DATASET=production
+   ```
+
+3. Run it:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+   Site: http://localhost:3000, Studio: http://localhost:3000/studio
+
+4. Allow the site to talk to the Studio origin. In https://www.sanity.io/manage, open the project, go to API, CORS origins, and add `http://localhost:3000` with credentials allowed. Add your production URL later too.
+
+The site builds and runs without a project ID. Pages show empty states until content exists.
+
+## Deploy to Vercel
+
+1. Push this repo to GitHub.
+2. Import it in Vercel. The framework preset is detected automatically.
+3. Add the same two environment variables under Project Settings, Environment Variables.
+4. Add the Vercel production URL (and your custom domain) as a CORS origin in Sanity with credentials allowed.
+5. Optional: set `NEXT_PUBLIC_SITE_URL` to your canonical domain so metadata URLs are correct.
+
+Content updates show up within 60 seconds (ISR). For instant updates, add a Sanity webhook that calls a revalidation route (not built yet).
+
+## Structure
+
+```
+src/app/(site)/        public pages (home, articles, comics, characters, corps)
+src/app/studio/        embedded Sanity Studio
+src/sanity/            client, queries, image helper, hand-written types
+src/sanity/schemaTypes document and object schemas
+src/components/        shared UI
+sanity.config.ts       Studio config
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Content model
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `article`: title, slug, excerpt, publishedAt, categories, mainImage, featured, body
+- `category`: title, slug, description
+- `comicRun`: title, slug, tier (essential, recommended, deep-cut), readingOrder, creators, years, cover, characters, summary
+- `character`: name, slug, alias, corps, portrait, species, homeSector, firstAppearance, appearsIn, bio
+- `corps`: name, slug, tagline, description
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Notes
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- This is an unofficial fan site. Do not upload official logos, studio stills or scanned comic pages you do not have rights to. The footer disclaimer is in `src/components/SiteFooter.tsx`.
+- Types in `src/sanity/types.ts` are written by hand. Sanity TypeGen is a good next step once the schema is stable.
