@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ComicCoverageCard,
+  KeyIssueCard,
   ReadingOrderCard,
   StoryArcCard,
 } from "@/components/cards";
-import { Thumb } from "@/components/Thumb";
+import { Wordmark } from "@/components/Logo";
 import { EmptyState, PageHeader, SectionTitle } from "@/components/ui";
 import { getComicsHub } from "@/sanity/data";
-import type { KeyIssue } from "@/sanity/types";
 
 export const revalidate = 60;
 
@@ -16,14 +17,6 @@ export const metadata: Metadata = {
   title: "Comics guide",
   description:
     "The Book of Oa: reading orders, story arc hubs, key issues and new-release coverage for Green Lantern comics.",
-};
-
-const keyIssueLabel: Record<KeyIssue["kind"], string> = {
-  "first-appearance": "First appearance",
-  origin: "Origin",
-  "villain-debut": "Villain debut",
-  "historic-ring": "Historic ring",
-  milestone: "Milestone",
 };
 
 export default async function ComicsPage() {
@@ -34,11 +27,21 @@ export default async function ComicsPage() {
 
   return (
     <>
-      <PageHeader
-        eyebrow="Comics guide"
-        title="The Book of Oa"
-        intro="Green Lantern continuity can be daunting. Start with a reading order, dive into an event hub, or browse the issues that matter most."
-      />
+      <div className="flex items-start justify-between gap-8">
+        <PageHeader
+          eyebrow="Comics guide"
+          title="The Book of Oa"
+          intro="Green Lantern continuity can be daunting. Start with a reading order, dive into an event hub, or browse the issues that matter most."
+        />
+        <Image
+          src="/dc-universe-corner-box.webp"
+          alt=""
+          width={132}
+          height={378}
+          sizes="56px"
+          className="hidden h-40 w-auto shrink-0 rounded-sm sm:block"
+        />
+      </div>
 
       {empty ? (
         <EmptyState>
@@ -49,13 +52,16 @@ export default async function ComicsPage() {
       {starter ? (
         <Link
           href={`/comics/reading-orders/${starter.slug}`}
-          className="panel group mb-12 flex flex-col gap-2 bg-[radial-gradient(circle_at_85%_0%,rgb(53_232_160/0.18),transparent_60%)] p-6 transition-colors hover:border-glow-dim sm:p-8"
+          className="panel group mb-12 flex items-center gap-6 bg-[radial-gradient(circle_at_85%_0%,rgb(34_179_78/0.18),transparent_60%)] p-6 transition-colors hover:border-glow-dim sm:p-8"
         >
-          <p className="eyebrow">Start here</p>
-          <h2 className="font-display text-3xl font-extrabold transition-colors group-hover:text-glow">
-            {starter.title}
-          </h2>
-          {starter.tagline ? <p className="max-w-xl text-muted">{starter.tagline}</p> : null}
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
+            <p className="eyebrow">Start here</p>
+            <h2 className="font-display text-3xl font-black transition-colors group-hover:text-glow">
+              {starter.title}
+            </h2>
+            {starter.tagline ? <p className="max-w-xl text-muted">{starter.tagline}</p> : null}
+          </div>
+          <Wordmark variant="modern" alt="" className="hidden w-56 shrink-0 md:block lg:w-64" />
         </Link>
       ) : null}
 
@@ -86,37 +92,7 @@ export default async function ComicsPage() {
           <SectionTitle>Key issues</SectionTitle>
           <div className="grid gap-4 md:grid-cols-2">
             {keyIssues.map((k) => (
-              <article key={k._id} className="panel flex gap-4 p-4">
-                <Thumb
-                  image={k.cover}
-                  aspect="aspect-[2/3]"
-                  className="w-20 shrink-0 rounded"
-                  sizes="80px"
-                  width={240}
-                />
-                <div className="min-w-0">
-                  <p className="eyebrow">{keyIssueLabel[k.kind]}</p>
-                  <h3 className="font-display text-base font-bold">
-                    {k.title}
-                    {k.publicationYear ? (
-                      <span className="font-normal text-muted"> ({k.publicationYear})</span>
-                    ) : null}
-                  </h3>
-                  <p className="mt-2 text-sm text-text/85">{k.whyItMatters}</p>
-                  {k.characters && k.characters.length > 0 ? (
-                    <p className="mt-2 text-xs text-muted">
-                      {k.characters.map((c, i) => (
-                        <span key={c.slug}>
-                          {i > 0 ? ", " : ""}
-                          <Link href={`/characters/${c.slug}`} className="text-glow hover:underline">
-                            {c.name}
-                          </Link>
-                        </span>
-                      ))}
-                    </p>
-                  ) : null}
-                </div>
-              </article>
+              <KeyIssueCard key={k._id} issue={k} />
             ))}
           </div>
         </section>

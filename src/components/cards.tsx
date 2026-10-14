@@ -2,10 +2,13 @@ import Link from "next/link";
 import type {
   ArticleSummary,
   CharacterSummary,
+  ComicIssue,
   CorpsSummary,
+  KeyIssue,
   ReadingOrderSummary,
   StoryArcSummary,
 } from "@/sanity/types";
+import { CorpsSymbol } from "./Logo";
 import { SpectrumDot } from "./ui";
 import { Thumb } from "./Thumb";
 import { TimeAgo } from "./TimeAgo";
@@ -125,6 +128,50 @@ export function ComicCoverageCard({ article }: { article: ArticleSummary }) {
   );
 }
 
+/** Portrait cover card for a new issue. Links to our coverage if there is any, else ComicVine. */
+export function ComicIssueCard({ issue }: { issue: ComicIssue }) {
+  const review = issue.coverage?.slug;
+  const className = "panel group flex flex-col gap-2 p-2.5 transition-colors hover:border-glow-dim";
+  const body = (
+    <>
+      <Thumb
+        image={issue.cover}
+        aspect="aspect-[2/3]"
+        className="rounded"
+        sizes="(min-width: 1024px) 15vw, 40vw"
+        width={400}
+      />
+      <p className="font-display text-sm font-bold leading-tight transition-colors group-hover:text-glow">
+        {issue.title}
+      </p>
+      {issue.storyTitle ? <p className="line-clamp-2 text-xs text-muted">{issue.storyTitle}</p> : null}
+      <p className="text-[0.7rem] text-muted">
+        {[issue.writers?.[0], formatDate(issue.releaseDate)].filter(Boolean).join("  •  ")}
+      </p>
+      {issue.coverage?.coverageType ? (
+        <span className="mt-auto w-fit rounded border border-glow-dim/60 bg-glow-dim/15 px-1.5 py-0.5 font-display text-[0.62rem] font-bold uppercase tracking-wider text-glow">
+          {coverageLabel[issue.coverage.coverageType]}
+        </span>
+      ) : null}
+    </>
+  );
+  if (review) {
+    return (
+      <Link href={`/news/${review}`} className={className}>
+        {body}
+      </Link>
+    );
+  }
+  if (issue.comicVineUrl) {
+    return (
+      <a href={issue.comicVineUrl} target="_blank" rel="noopener noreferrer" className={className}>
+        {body}
+      </a>
+    );
+  }
+  return <div className={className}>{body}</div>;
+}
+
 export function CharacterCard({ character }: { character: CharacterSummary }) {
   return (
     <Link
@@ -156,15 +203,18 @@ export function CorpsCard({ corps }: { corps: CorpsSummary }) {
     <Link
       href={`/corps/${corps.slug}`}
       data-spectrum={corps.spectrum}
-      className="panel group flex flex-col gap-1 border-l-4 border-l-[var(--spec)] p-4 transition-colors hover:border-glow-dim"
+      className="panel group flex items-start gap-4 border-l-4 border-l-[var(--spec)] p-4 transition-colors hover:border-glow-dim"
     >
-      <p className="font-display text-xs font-bold uppercase tracking-wider text-[var(--spec)]">
-        {corps.emotion}
-      </p>
-      <h3 className="font-display text-lg font-bold transition-colors group-hover:text-glow">
-        {corps.name}
-      </h3>
-      {corps.tagline ? <p className="text-sm text-muted">{corps.tagline}</p> : null}
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <p className="font-display text-xs font-bold uppercase tracking-wider text-[var(--spec)]">
+          {corps.emotion}
+        </p>
+        <h3 className="font-display text-lg font-bold transition-colors group-hover:text-glow">
+          {corps.name}
+        </h3>
+        {corps.tagline ? <p className="text-sm text-muted">{corps.tagline}</p> : null}
+      </div>
+      <CorpsSymbol spectrum={corps.spectrum} className="size-12 shrink-0" />
     </Link>
   );
 }
@@ -220,5 +270,51 @@ export function StoryArcCard({ arc }: { arc: StoryArcSummary }) {
         </p>
       </div>
     </Link>
+  );
+}
+
+const keyIssueKind = {
+  "first-appearance": "First appearance",
+  origin: "Origin",
+  "villain-debut": "Villain debut",
+  "historic-ring": "Historic ring",
+  milestone: "Milestone",
+} as const;
+
+/** Key issue card. `except` drops a character from the list, on that character's own page. */
+export function KeyIssueCard({ issue, except }: { issue: KeyIssue; except?: string }) {
+  const characters = issue.characters?.filter((c) => c.slug !== except) ?? [];
+  return (
+    <article className="panel flex gap-4 p-4">
+      <Thumb
+        image={issue.cover}
+        aspect="aspect-[2/3]"
+        className="w-20 shrink-0 rounded"
+        sizes="80px"
+        width={240}
+      />
+      <div className="min-w-0">
+        <p className="eyebrow">{keyIssueKind[issue.kind]}</p>
+        <h3 className="font-display text-base font-bold">
+          {issue.title}
+          {issue.publicationYear ? (
+            <span className="font-normal text-muted"> ({issue.publicationYear})</span>
+          ) : null}
+        </h3>
+        <p className="mt-2 text-sm text-text/85">{issue.whyItMatters}</p>
+        {characters.length > 0 ? (
+          <p className="mt-2 text-xs text-muted">
+            {characters.map((c, i) => (
+              <span key={c.slug}>
+                {i > 0 ? ", " : ""}
+                <Link href={`/characters/${c.slug}`} className="text-glow hover:underline">
+                  {c.name}
+                </Link>
+              </span>
+            ))}
+          </p>
+        ) : null}
+      </div>
+    </article>
   );
 }

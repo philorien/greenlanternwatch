@@ -13,7 +13,7 @@ export function PageHeader({
   return (
     <div className="mb-10 max-w-3xl">
       {eyebrow ? <p className="eyebrow mb-3">{eyebrow}</p> : null}
-      <h1 className="font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+      <h1 className="font-display text-4xl font-black leading-tight sm:text-5xl">
         {title}
       </h1>
       {intro ? <p className="mt-4 text-lg text-muted">{intro}</p> : null}

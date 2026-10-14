@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site } from "@/config/site";
-import { LogoMark } from "./Logo";
+import { SiteLogo } from "./Logo";
+import { MobileMenu } from "./MobileMenu";
 
 function SearchIcon() {
   return (
@@ -15,27 +16,28 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-ink/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3 sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-3">
-          <LogoMark />
-          <span className="leading-tight">
-            <span className="block font-display text-xl font-extrabold uppercase tracking-wide sm:text-2xl">
-              Green Lantern <span className="text-glow">Watch</span>
-            </span>
-            <span className="hidden text-[0.62rem] font-medium uppercase tracking-[0.14em] text-muted sm:block">
-              {site.tagline}
-            </span>
+        <Link href="/" className="flex shrink-0 flex-col items-start gap-1.5">
+          <SiteLogo variant="short" sizes="91px" eager className="h-10 sm:hidden" />
+          <SiteLogo
+            variant="long"
+            sizes="(min-width: 1280px) 432px, (min-width: 1024px) 308px, 370px"
+            eager
+            className="hidden h-6 sm:block lg:h-5 xl:h-7"
+          />
+          <span className="hidden text-[0.62rem] font-medium uppercase tracking-[0.14em] text-muted sm:block">
+            {site.tagline}
           </span>
         </Link>
 
         <nav
           aria-label="Primary"
-          className="ml-auto hidden items-center gap-6 font-display text-[0.8rem] font-semibold uppercase tracking-wider lg:flex"
+          className="ml-auto hidden items-center gap-4 font-display text-[0.8rem] font-semibold uppercase tracking-wider lg:flex xl:gap-6"
         >
           {site.nav.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-muted transition-colors hover:text-glow"
+              className="whitespace-nowrap text-muted transition-colors hover:text-glow"
             >
               {link.label}
             </Link>
@@ -50,25 +52,7 @@ export function SiteHeader() {
           >
             <SearchIcon />
           </Link>
-          <details className="group relative lg:hidden">
-            <summary className="flex cursor-pointer list-none items-center rounded-md border border-line px-3 py-1.5 text-sm text-muted marker:content-none">
-              Menu
-            </summary>
-            <nav
-              aria-label="Mobile"
-              className="panel absolute right-0 mt-2 flex w-56 flex-col p-2"
-            >
-              {site.nav.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded px-3 py-2 font-display text-sm font-semibold uppercase tracking-wider text-muted hover:bg-surface-2 hover:text-glow"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </details>
+          <MobileMenu links={site.nav} />
         </div>
       </div>
     </header>

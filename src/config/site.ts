@@ -11,6 +11,8 @@ export const site = {
     { href: "/category/reviews", label: "Reviews" },
     { href: "/about", label: "About" },
   ],
+  // Shown on the About page for corrections and tips. Hidden while empty.
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
   // Fill these in. Icons only render for the links that are set.
   socials: {
     x: process.env.NEXT_PUBLIC_SOCIAL_X ?? "",

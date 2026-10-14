@@ -37,6 +37,11 @@ export const keyIssue = defineType({
     }),
     defineField({ name: "publicationYear", type: "number" }),
     defineField({
+      name: "coverDate",
+      type: "date",
+      description: "Orders issues from the same year. Filled in from ComicVine.",
+    }),
+    defineField({
       name: "whyItMatters",
       type: "text",
       rows: 4,

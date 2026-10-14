@@ -6,7 +6,7 @@ const articleSummary = /* groq */ `
   "slug": slug.current,
   excerpt,
   publishedAt,
-  mainImage { asset, alt },
+  mainImage { asset, hotspot, alt },
   "category": category->{ title, "slug": slug.current },
   "author": author->{ name, "slug": slug.current },
   "bodyLength": length(pt::text(body)),
@@ -48,13 +48,41 @@ const arcSummary = /* groq */ `
   cover { asset, alt }
 `;
 
+const keyIssueSummary = /* groq */ `
+  _id,
+  title,
+  "slug": slug.current,
+  kind,
+  publicationYear,
+  whyItMatters,
+  cover { asset, alt },
+  "characters": characters[]->{ name, "slug": slug.current }
+`;
+
+/** Rich text with internal links resolved to the linked page's type and current slug. */
+const richText = (field: string) => /* groq */ `
+  ${field}[]{
+    ...,
+    markDefs[]{
+      ...,
+      _type == "internalLink" => { "page": reference->{ _type, "slug": slug.current } }
+    }
+  }
+`;
+
 const readingEntry = /* groq */ `
   _key,
   title,
   issues,
   format,
   note,
-  "arc": arc->{ title, "slug": slug.current }
+  "arc": arc->{ title, "slug": slug.current },
+  cover { asset, alt, credit },
+  releaseStart,
+  releaseEnd,
+  writers,
+  artists,
+  comicVineUrl
 `;
 
 export const HOME_QUERY = defineQuery(/* groq */ `{
@@ -62,8 +90,12 @@ export const HOME_QUERY = defineQuery(/* groq */ `{
     | order(publishedAt desc)[0...4]{ ${articleSummary} },
   "latest": *[_type == "article" && defined(slug.current)]
     | order(publishedAt desc)[0...12]{ ${articleSummary} },
-  "comics": *[_type == "article" && defined(slug.current) && defined(comicRelease.title)]
-    | order(comicRelease.releaseDate desc, publishedAt desc)[0...5]{ ${articleSummary} },
+  "comics": *[_type == "comicIssue" && dateTime(releaseDate + "T00:00:00Z") <= dateTime(now())]
+    | order(releaseDate desc)[0...30]{
+      _id, title, series, storyTitle, releaseDate, cover { asset, alt },
+      writers, artists, comicVineUrl,
+      "coverage": coverage->{ "slug": slug.current, "coverageType": comicRelease.coverageType }
+    },
   "features": *[_type == "article" && defined(slug.current)
       && category._ref in *[_type == "category" && slug.current == "features"]._id]
     | order(publishedAt desc)[0...3]{ ${articleSummary} },
@@ -94,13 +126,28 @@ export const CATEGORY_SLUGS_QUERY = defineQuery(/* groq */ `
 export const ARTICLE_QUERY = defineQuery(/* groq */ `
   *[_type == "article" && slug.current == $slug][0]{
     ${articleSummary},
-    mainImage { asset, alt, caption, credit },
-    body,
+    mainImage { asset, hotspot, alt, caption, credit },
+    ${richText("body")},
     tags,
     "related": *[_type == "article" && defined(slug.current) && _id != ^._id
         && category._ref == ^.category._ref]
       | order(publishedAt desc)[0...3]{ ${articleSummary} }
   }
+`);
+
+export const AUTHOR_PAGE_QUERY = defineQuery(/* groq */ `{
+  "author": *[_type == "author" && slug.current == $slug][0]{
+    _id, name, "slug": slug.current, role, avatar { asset, hotspot, alt },
+    ${richText("bio")},
+    "bioText": pt::text(bio),
+    socials
+  },
+  "articles": *[_type == "article" && defined(slug.current) && author->slug.current == $slug]
+    | order(publishedAt desc)[0...60]{ ${articleSummary} }
+}`);
+
+export const AUTHOR_SLUGS_QUERY = defineQuery(/* groq */ `
+  *[_type == "author" && defined(slug.current)]{ "slug": slug.current }
 `);
 
 export const ARTICLE_SLUGS_QUERY = defineQuery(/* groq */ `
@@ -116,18 +163,14 @@ export const COMICS_HUB_QUERY = defineQuery(/* groq */ `{
   "arcs": *[_type == "storyArc" && defined(slug.current)]
     | order(startYear asc){ ${arcSummary} },
   "keyIssues": *[_type == "keyIssue" && defined(slug.current)]
-    | order(publicationYear asc){
-      _id, title, "slug": slug.current, kind, publicationYear,
-      whyItMatters, cover { asset, alt },
-      "characters": characters[]->{ name, "slug": slug.current }
-    },
+    | order(publicationYear asc, coverDate asc){ ${keyIssueSummary} },
   "coverage": *[_type == "article" && defined(slug.current) && defined(comicRelease.title)]
     | order(comicRelease.releaseDate desc, publishedAt desc)[0...6]{ ${articleSummary} }
 }`);
 
 export const READING_ORDER_QUERY = defineQuery(/* groq */ `
   *[_type == "readingOrder" && slug.current == $slug][0]{
-    _id, title, "slug": slug.current, audience, tagline, intro,
+    _id, title, "slug": slug.current, audience, tagline, ${richText("intro")},
     sections[]{ _key, title, note, entries[]{ ${readingEntry} } }
   }
 `);
@@ -139,7 +182,7 @@ export const READING_ORDER_SLUGS_QUERY = defineQuery(/* groq */ `
 export const STORY_ARC_QUERY = defineQuery(/* groq */ `
   *[_type == "storyArc" && slug.current == $slug][0]{
     ${arcSummary},
-    summary,
+    ${richText("summary")},
     readingList[]{ ${readingEntry} },
     "characters": characters[]->{ ${characterSummary} },
     "corps": corps[]->{ ${corpsSummary} }
@@ -160,15 +203,17 @@ export const CHARACTERS_QUERY = defineQuery(/* groq */ `{
 export const CHARACTER_QUERY = defineQuery(/* groq */ `
   *[_type == "character" && slug.current == $slug][0]{
     ${characterSummary},
-    bio,
+    ${richText("bio")},
     species,
     homeSector,
     firstAppearance,
-    abilities,
+    ${richText("abilities")},
     constructStyle,
     appearsIn,
     portrayals[]{ _key, actor, production },
     "keyStorylines": keyStorylines[]->{ ${arcSummary} },
+    "keyIssues": *[_type == "keyIssue" && defined(slug.current) && ^._id in characters[]._ref]
+      | order(publicationYear asc, coverDate asc){ ${keyIssueSummary} },
     "readingRecommendations": readingRecommendations[]->{
       _id, _type, title, "slug": slug.current
     }
@@ -188,7 +233,11 @@ export const CORPS_QUERY = defineQuery(/* groq */ `
   *[_type == "corps" && slug.current == $slug][0]{
     ${corpsSummary},
     keyFigures,
-    description,
+    "keyFigureCharacters": *[_type == "character" && defined(slug.current)
+      && (name in ^.keyFigures || alias in ^.keyFigures)]{ name, alias, "slug": slug.current },
+    ${richText("description")},
+    "storylines": *[_type == "storyArc" && ^._id in corps[]._ref]
+      | order(startYear asc){ ${arcSummary} },
     "members": *[_type == "character" && corps._ref == ^._id]
       | order(order asc, name asc){ ${characterSummary} }
   }

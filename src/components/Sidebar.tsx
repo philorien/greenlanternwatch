@@ -30,11 +30,11 @@ export function StartHerePanel({
   return (
     <Link
       href={`/comics/reading-orders/${order.slug}`}
-      className="panel group flex flex-col items-center gap-3 bg-[radial-gradient(circle_at_50%_0%,rgb(53_232_160/0.16),transparent_65%)] p-6 text-center transition-colors hover:border-glow-dim"
+      className="panel group flex flex-col items-center gap-3 bg-[radial-gradient(circle_at_50%_0%,rgb(34_179_78/0.16),transparent_65%)] p-6 text-center transition-colors hover:border-glow-dim"
     >
       <LogoMark className="size-12" />
       <p className="eyebrow">New to Green Lantern?</p>
-      <p className="font-display text-xl font-extrabold leading-snug transition-colors group-hover:text-glow">
+      <p className="font-display text-xl font-black leading-snug transition-colors group-hover:text-glow">
         {order.title}
       </p>
       {order.tagline ? <p className="text-sm text-muted">{order.tagline}</p> : null}

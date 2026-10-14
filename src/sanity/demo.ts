@@ -4,6 +4,7 @@ import type {
   ArticleSummary,
   CategoryItem,
   CharacterSummary,
+  ComicIssue,
   CorpsSummary,
   KeyIssue,
   ReadingOrderSummary,
@@ -90,6 +91,24 @@ export const demoArticles: ArticleSummary[] = [
   mk(11, "Demo feature: on symbols and what they mean", "features", 7),
   mk(12, "Demo feature: why the Corps still matters", "features", 8),
   mk(13, "Demo feature: a history piece", "features", 9),
+];
+
+const issue = (i: number, series: string, number: number, releaseDate: string): ComicIssue => ({
+  _id: `ci${i}`,
+  title: `${series} #${number}`,
+  series,
+  storyTitle: "Placeholder story title",
+  releaseDate,
+  writers: ["Writer"],
+  artists: ["Artist"],
+});
+
+export const demoIssues: ComicIssue[] = [
+  issue(1, "Demo Series", 21, "2026-10-14"),
+  issue(2, "Demo Spinoff", 19, "2026-10-07"),
+  issue(3, "Demo Flagship", 39, "2026-09-23"),
+  issue(4, "Demo Series", 20, "2026-09-09"),
+  issue(5, "Demo Spinoff", 18, "2026-09-02"),
 ];
 
 export const demoCorps: CorpsSummary[] = [

@@ -45,15 +45,26 @@ export default async function ArticlePage({ params }: PageProps<"/news/[slug]">)
               {article.category.title}
             </Link>
           ) : null}
-          <h1 className="mt-3 font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-black leading-tight sm:text-5xl">
             {article.title}
           </h1>
           {article.excerpt ? (
             <p className="mt-4 text-lg text-muted">{article.excerpt}</p>
           ) : null}
           <p className="mt-4 text-sm text-muted">
+            {article.author ? (
+              <>
+                By{" "}
+                <Link
+                  href={`/authors/${article.author.slug}`}
+                  className="text-text transition-colors hover:text-glow"
+                >
+                  {article.author.name}
+                </Link>
+                {"  •  "}
+              </>
+            ) : null}
             {[
-              article.author ? `By ${article.author.name}` : null,
               formatDate(article.publishedAt),
               article.readMinutes ? `${article.readMinutes} min read` : null,
             ]

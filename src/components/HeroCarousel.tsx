@@ -11,6 +11,7 @@ export type HeroSlide = {
   category?: string;
   imageSrc?: string;
   imageAlt?: string;
+  imagePosition?: string;
 };
 
 export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
@@ -42,11 +43,12 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
                 sizes="(min-width: 1024px) 66vw, 100vw"
                 priority={i === 0}
                 className="object-cover"
+                style={{ objectPosition: slide.imagePosition }}
               />
             ) : (
               <div
                 aria-hidden
-                className="absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,rgb(53_232_160/0.35),transparent_55%),linear-gradient(135deg,#0b1f17,#030c09)]"
+                className="absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,rgb(34_179_78/0.35),transparent_55%),linear-gradient(135deg,#0b1f17,#030c09)]"
               />
             )}
             <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-transparent" />
@@ -55,7 +57,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
                 <span aria-hidden className="size-2 rounded-full bg-glow shadow-[0_0_8px_var(--color-glow)]" />
                 Featured{slide.category ? ` / ${slide.category}` : ""}
               </p>
-              <h2 className="font-display text-2xl font-extrabold leading-tight sm:text-4xl">
+              <h2 className="font-display text-2xl font-black leading-tight sm:text-4xl">
                 {slide.title}
               </h2>
               {slide.excerpt ? (

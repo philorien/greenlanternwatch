@@ -2,6 +2,7 @@ import type { PortableTextBlock } from "next-sanity";
 
 export type SanityImage = {
   asset?: { _ref: string };
+  hotspot?: { x: number; y: number };
   alt?: string;
   caption?: string;
   credit?: string;
@@ -41,6 +42,30 @@ export type ArticleSummary = {
   bodyLength?: number | null;
   readMinutes?: number;
   comicRelease?: ComicRelease;
+};
+
+export type Author = {
+  _id: string;
+  name: string;
+  slug: string;
+  role?: string;
+  bio?: PortableTextBlock[];
+  bioText?: string;
+  avatar?: SanityImage;
+  socials?: Partial<Record<"x" | "bluesky" | "instagram" | "youtube" | "website", string | null>>;
+};
+
+export type ComicIssue = {
+  _id: string;
+  title: string;
+  series?: string;
+  storyTitle?: string;
+  releaseDate: string;
+  cover?: SanityImage;
+  writers?: string[];
+  artists?: string[];
+  comicVineUrl?: string;
+  coverage?: { slug: string; coverageType?: ComicRelease["coverageType"] };
 };
 
 export type Article = ArticleSummary & {
@@ -95,6 +120,12 @@ export type ReadingEntry = {
   format?: "issues" | "collected" | "event";
   note?: string;
   arc?: { title: string; slug: string };
+  cover?: SanityImage;
+  releaseStart?: string;
+  releaseEnd?: string;
+  writers?: string[];
+  artists?: string[];
+  comicVineUrl?: string;
 };
 
 export type ReadingSection = {
@@ -151,6 +182,7 @@ export type Character = CharacterSummary & {
   appearsIn?: string[];
   portrayals?: { _key: string; actor: string; production: string }[];
   keyStorylines?: StoryArcSummary[];
+  keyIssues?: KeyIssue[];
   readingRecommendations?: {
     _id: string;
     _type: "readingOrder" | "storyArc";
@@ -161,14 +193,16 @@ export type Character = CharacterSummary & {
 
 export type Corps = CorpsSummary & {
   keyFigures?: string[];
+  keyFigureCharacters?: { name: string; alias?: string; slug: string }[];
   description?: PortableTextBlock[];
+  storylines?: StoryArcSummary[];
   members?: CharacterSummary[];
 };
 
 export type HomeData = {
   hero: ArticleSummary[];
   latest: ArticleSummary[];
-  comics: ArticleSummary[];
+  comics: ComicIssue[];
   features: ArticleSummary[];
   categories: CategoryItem[];
   startHere: { title: string; slug: string; tagline?: string } | null;

@@ -1,4 +1,6 @@
 import { defineArrayMember, defineType } from "sanity";
+import { DocumentIcon } from "@sanity/icons/Document";
+import { EarthGlobeIcon } from "@sanity/icons/EarthGlobe";
 
 export const blockContent = defineType({
   name: "blockContent",
@@ -26,7 +28,8 @@ export const blockContent = defineType({
           {
             name: "link",
             type: "object",
-            title: "Link",
+            title: "Web link",
+            icon: EarthGlobeIcon,
             fields: [
               {
                 name: "href",
@@ -34,6 +37,28 @@ export const blockContent = defineType({
                 title: "URL",
                 validation: (rule) =>
                   rule.uri({ scheme: ["http", "https", "mailto"] }),
+              },
+            ],
+          },
+          {
+            name: "internalLink",
+            type: "object",
+            title: "Internal link",
+            icon: DocumentIcon,
+            fields: [
+              {
+                name: "reference",
+                type: "reference",
+                title: "Page",
+                description: "An article, character, Corps, story arc or reading order on this site.",
+                to: [
+                  { type: "article" },
+                  { type: "character" },
+                  { type: "corps" },
+                  { type: "storyArc" },
+                  { type: "readingOrder" },
+                ],
+                validation: (rule) => rule.required(),
               },
             ],
           },

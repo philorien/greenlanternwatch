@@ -1,4 +1,4 @@
-import { ArticleCard, ComicCoverageCard } from "@/components/cards";
+import { ArticleCard, ComicIssueCard } from "@/components/cards";
 import { HeroCarousel, type HeroSlide } from "@/components/HeroCarousel";
 import {
   CategoriesPanel,
@@ -9,7 +9,7 @@ import {
 } from "@/components/Sidebar";
 import { EmptyState, SectionTitle } from "@/components/ui";
 import { getHome } from "@/sanity/data";
-import { urlFor } from "@/sanity/image";
+import { focalPoint, urlFor } from "@/sanity/image";
 
 export const revalidate = 60;
 
@@ -25,6 +25,7 @@ export default async function HomePage() {
       ? urlFor(a.mainImage).width(1600).auto("format").url()
       : undefined,
     imageAlt: a.mainImage?.alt,
+    imagePosition: focalPoint(a.mainImage),
   }));
 
   const heroIds = new Set(data.hero.map((a) => a._id));
@@ -59,14 +60,14 @@ export default async function HomePage() {
           <SectionTitle href="/comics">Latest comics</SectionTitle>
           {data.comics.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
-              {data.comics.map((a) => (
-                <ComicCoverageCard key={a._id} article={a} />
+              {data.comics.map((issue) => (
+                <ComicIssueCard key={issue._id} issue={issue} />
               ))}
             </div>
           ) : (
             <EmptyState>
-              New-release coverage appears here. Fill in the Comic coverage
-              fields on an article to add it.
+              The newest Lantern issues appear here. Run
+              scripts/comicvine/latest.mjs to pull them from ComicVine.
             </EmptyState>
           )}
         </section>

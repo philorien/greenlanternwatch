@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { StoryArcCard } from "@/components/cards";
+import { KeyIssueCard, StoryArcCard } from "@/components/cards";
 import { RichText } from "@/components/RichText";
 import { Thumb } from "@/components/Thumb";
 import { BackLink, SectionTitle, SpectrumDot, Tag } from "@/components/ui";
@@ -63,7 +63,7 @@ export default async function CharacterPage({
           priority
         />
         <div>
-          <h1 className="font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+          <h1 className="font-display text-4xl font-black leading-tight sm:text-5xl">
             {c.name}
           </h1>
           {c.corps ? (
@@ -110,14 +110,14 @@ export default async function CharacterPage({
 
         {c.abilities && c.abilities.length > 0 ? (
           <section>
-            <h2 className="mb-3 font-display text-2xl font-extrabold">Powers and abilities</h2>
+            <h2 className="mb-3 font-display text-2xl font-black">Powers and abilities</h2>
             <RichText value={c.abilities} />
           </section>
         ) : null}
 
         {c.constructStyle ? (
           <section>
-            <h2 className="mb-3 font-display text-2xl font-extrabold">Construct style</h2>
+            <h2 className="mb-3 font-display text-2xl font-black">Construct style</h2>
             <p className="text-text/85">{c.constructStyle}</p>
           </section>
         ) : null}
@@ -129,6 +129,17 @@ export default async function CharacterPage({
           <div className="grid gap-4 md:grid-cols-2">
             {c.keyStorylines.map((a) => (
               <StoryArcCard key={a._id} arc={a} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {c.keyIssues && c.keyIssues.length > 0 ? (
+        <section className="mt-14">
+          <SectionTitle>Key issues</SectionTitle>
+          <div className="grid gap-4 md:grid-cols-2">
+            {c.keyIssues.map((k) => (
+              <KeyIssueCard key={k._id} issue={k} except={c.slug} />
             ))}
           </div>
         </section>

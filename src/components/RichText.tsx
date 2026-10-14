@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   PortableText,
   type PortableTextBlock,
   type PortableTextComponents,
 } from "next-sanity";
 import { urlFor } from "@/sanity/image";
+import { pathFor, type LinkableType } from "@/sanity/paths";
 
 const components: PortableTextComponents = {
   types: {
@@ -37,6 +39,11 @@ const components: PortableTextComponents = {
           {children}
         </a>
       );
+    },
+    internalLink: ({ value, children }) => {
+      const page = value?.page as { _type: LinkableType; slug?: string } | null | undefined;
+      if (!page?.slug) return <>{children}</>;
+      return <Link href={pathFor(page._type, page.slug)}>{children}</Link>;
     },
   },
 };

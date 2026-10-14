@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CharacterCard, CorpsCard, yearSpan } from "@/components/cards";
-import { ReadingList } from "@/components/ReadingList";
+import { Wordmark, type WordmarkVariant } from "@/components/Logo";
+import { ComicVineCredit, ReadingList } from "@/components/ReadingList";
 import { RichText } from "@/components/RichText";
 import { Thumb } from "@/components/Thumb";
 import { BackLink, SectionTitle } from "@/components/ui";
 import { getStoryArc, getStoryArcSlugs } from "@/sanity/data";
 
 export const revalidate = 60;
+
+const arcWordmarks: Record<string, WordmarkVariant> = {
+  "absolute-green-lantern": "absolute-green-lantern",
+};
 
 export async function generateStaticParams() {
   const slugs = await getStoryArcSlugs();
@@ -30,6 +35,7 @@ export default async function StoryArcPage({
   const arc = await getStoryArc(slug);
   if (!arc) notFound();
 
+  const wordmark = arcWordmarks[slug];
   const years = yearSpan(arc.startYear, arc.endYear);
   const facts = [
     arc.creators?.length ? ["Creators", arc.creators.join(", ")] : null,
@@ -50,8 +56,9 @@ export default async function StoryArcPage({
           priority
         />
         <div>
+          {wordmark ? <Wordmark variant={wordmark} className="mb-6 w-full max-w-xs" /> : null}
           <p className="eyebrow">Story arc</p>
-          <h1 className="mt-2 font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+          <h1 className="mt-2 font-display text-4xl font-black leading-tight sm:text-5xl">
             {arc.title}
           </h1>
           {arc.tagline ? <p className="mt-4 text-lg text-muted">{arc.tagline}</p> : null}
@@ -76,6 +83,7 @@ export default async function StoryArcPage({
         <section className="mt-14 max-w-3xl">
           <SectionTitle>Reading list</SectionTitle>
           <ReadingList entries={arc.readingList} />
+          <ComicVineCredit entries={arc.readingList} />
         </section>
       ) : null}
 

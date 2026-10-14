@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/exo-2";
+import "@fontsource-variable/archivo";
 import "@fontsource-variable/inter";
 import { site } from "@/config/site";
 import "./globals.css";

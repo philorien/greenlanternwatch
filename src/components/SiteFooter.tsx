@@ -1,20 +1,15 @@
 import Link from "next/link";
 import { site } from "@/config/site";
-import { LogoMark } from "./Logo";
+import { SiteLogo } from "./Logo";
 import { Socials } from "./Socials";
 
 export function SiteFooter() {
   return (
     <footer className="mt-20 border-t border-line">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <LogoMark className="size-9" />
-          <span className="leading-tight">
-            <span className="block font-display text-base font-extrabold uppercase tracking-wide">
-              Green Lantern <span className="text-glow">Watch</span>
-            </span>
-            <span className="text-xs text-muted">{site.tagline}.</span>
-          </span>
+        <Link href="/" className="flex flex-col items-start gap-3">
+          <SiteLogo variant="full" sizes="177px" className="h-20" />
+          <span className="text-xs text-muted">{site.tagline}.</span>
         </Link>
         <nav aria-label="Footer" className="flex gap-6 text-sm text-muted">
           <Link href="/about" className="hover:text-glow">About</Link>

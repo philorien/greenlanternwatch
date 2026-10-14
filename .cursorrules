@@ -1,0 +1,33 @@
+## Design Context
+
+### Users
+Green Lantern fans at every level, served equally:
+- **Newcomers** arriving from the Lanterns TV show, Absolute Green Lantern or the comics' 2020s relaunches, who need to know where to start and what anything means. They land on reading orders, "Start here" panels and character profiles.
+- **Long-time fans** tracking news, new issues and reviews, and digging into the reading guide ("The Book of Oa"), the character database and the emotional spectrum.
+
+The job: keep up with Green Lantern across comics, TV and film, and find the right thing to read next without wading through clutter. Most visits are quick news checks; the comics guide and database get longer, deliberate sessions.
+
+### Brand Personality
+- **Three words:** Trustworthy, cosmic, welcoming.
+- **Voice:** A knowledgeable fan talking to another fan. Plain, warm and accurate. Explain lore instead of assuming it. Light in-universe touches are welcome ("Your Sector", "The Book of Oa") but never at the cost of clarity.
+- **Emotional goals:** Confidence that the information is right, a sense of the scale and wonder of the Green Lantern universe, and the feeling that anyone is welcome regardless of how much they've read.
+
+### Aesthetic Direction
+- **Tone:** Clean editorial news site with Green Lantern accents. Structure, hierarchy and readability come first; the Green Lantern identity lives in the logos, symbols, spectrum colors and restrained green highlights.
+- **References:** Polygon and The Verge for editorial layout, typography and confident use of color. DC.com for how comic properties, covers and series logos are presented with polish.
+- **Anti-references:**
+  - Ad-cluttered fan wikis (Fandom): no dense sidebars, popups or visual noise.
+  - Cheesy or campy superhero styling (2011-movie vibes): no gimmicky effects, cartoon gradients or over-themed UI.
+  - Overdone neon: green glow is an accent, not a wallpaper.
+- **Theme:** Dark only. `color-scheme: dark`.
+- **Color tokens** (`src/app/globals.css`): ink `#030c09` background, surfaces `#071611` and `#0b1f17`, line `#143527`, text `#e8f4ed`, muted `#8aa89a`, glow `#22b34e` with glow-dim `#188138`. Each Corps has a spectrum color via `data-spectrum`, used only in Corps and character contexts.
+- **Typography:** Archivo (variable, normal width) for display, with Black (900) for large headings and lighter weights for small UI text. Inter for body copy.
+- **Brand assets:** Green Lantern Watch logos (`SiteLogo`: long, short and full stacked), the Corps symbols (`CorpsSymbol`), series wordmarks (`Wordmark`) and the favicon in `src/app/icon.png`.
+- **DC branding:** The DC logo and DC trade dress (such as the DC Universe corner box) may appear only as decoration inside comics content. Never use them in the header, footer, favicon or site identity, and never in a way that suggests the site is official. The unofficial fan site disclaimer stays in the footer.
+
+### Design Principles
+1. **Editorial first, Green Lantern second.** Every page should work as a clean, scannable news or reference page. Add Green Lantern identity through logos, symbols and accent color, not by theming every surface.
+2. **A trustworthy fan source, never an official one.** Accuracy, credits and sourcing are visible. DC's own branding stays decorative and confined to comics content.
+3. **Welcoming at the door, deep inside.** Give newcomers a clear first step on every major page and explain lore in plain language; let fans go as deep as they want through reading orders, arcs and the database.
+4. **Cosmic restraint.** Use glow and spectrum color sparingly so they keep their impact: one glowing focal point per view at most, spectrum colors only where a Corps is the subject, and no neon outlines or stacked glows.
+5. **Accessible by default.** Meet WCAG 2.2 AA: text contrast of at least 4.5:1, visible focus states, full keyboard support, meaningful alt text (empty alt for decorative images), and `prefers-reduced-motion` respected for any animation, including the hero carousel.

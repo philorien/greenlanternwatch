@@ -8,6 +8,7 @@ import {
   demoCategories,
   demoCharacters,
   demoCorps,
+  demoIssues,
   demoKeyIssues,
   demoOrders,
   isDemo,
@@ -16,9 +17,11 @@ import * as q from "./queries";
 import type {
   Article,
   ArticleSummary,
+  Author,
   CategoryItem,
   Character,
   CharacterSummary,
+  ComicIssue,
   ComicsHubData,
   Corps,
   CorpsSummary,
@@ -43,11 +46,26 @@ const fetchList = <T>(query: string, params: QueryParams, empty: T, demo: T, tag
 
 /* Home */
 
+const HOME_COMICS = 5;
+
+/** Newest issue of each series first, then the next newest overall to fill the row. */
+function latestPerSeries(issues: ComicIssue[]) {
+  const seen = new Set<string>();
+  const leads: ComicIssue[] = [];
+  const rest: ComicIssue[] = [];
+  for (const issue of issues) {
+    const series = issue.series ?? issue.title;
+    (seen.has(series) ? rest : leads).push(issue);
+    seen.add(series);
+  }
+  return [...leads, ...rest].slice(0, HOME_COMICS);
+}
+
 export async function getHome(): Promise<HomeData> {
   const demoHome: HomeData = {
     hero: demoArticles.slice(0, 4),
     latest: demoArticles.slice(0, 12),
-    comics: demoArticles.filter((a) => a.comicRelease).slice(0, 5),
+    comics: demoIssues,
     features: demoArticles.filter((a) => a.category?.slug === "features").slice(0, 3),
     categories: demoCategories,
     startHere: { title: demoOrders[0].title, slug: demoOrders[0].slug, tagline: demoOrders[0].tagline },
@@ -57,14 +75,14 @@ export async function getHome(): Promise<HomeData> {
     {},
     { hero: [], latest: [], comics: [], features: [], categories: [], startHere: null },
     demoHome,
-    ["article", "category", "readingOrder"],
+    ["article", "category", "readingOrder", "comicIssue"],
   );
   const hero = data.hero.length > 0 ? data.hero : data.latest.slice(0, 3);
   return {
     ...data,
     hero: hero.map(withReadTime),
     latest: data.latest.map(withReadTime),
-    comics: data.comics.map(withReadTime),
+    comics: latestPerSeries(data.comics),
     features: data.features.map(withReadTime),
   };
 }
@@ -117,6 +135,35 @@ export async function getArticle(slug: string): Promise<Article | null> {
 
 export const getArticleSlugs = () =>
   fetchList<{ slug: string }[]>(q.ARTICLE_SLUGS_QUERY, {}, [], demoArticles.map((a) => ({ slug: a.slug })), ["article"]);
+
+/* Authors */
+
+export async function getAuthorPage(slug: string) {
+  const demoAuthor = demoArticles.find((a) => a.author?.slug === slug)?.author;
+  const demoPage = {
+    author: demoAuthor
+      ? { _id: "au1", ...demoAuthor, role: "Contributor", bio: [block("Placeholder bio for this author.")] }
+      : null,
+    articles: demoArticles.filter((a) => a.author?.slug === slug),
+  };
+  const data = await fetchList<{ author: Author | null; articles: ArticleSummary[] }>(
+    q.AUTHOR_PAGE_QUERY,
+    { slug },
+    { author: null, articles: [] },
+    demoPage,
+    ["author", "article"],
+  );
+  return { ...data, articles: data.articles.map(withReadTime) };
+}
+
+export const getAuthorSlugs = () =>
+  fetchList<{ slug: string }[]>(
+    q.AUTHOR_SLUGS_QUERY,
+    {},
+    [],
+    [...new Set(demoArticles.flatMap((a) => (a.author ? [a.author.slug] : [])))].map((slug) => ({ slug })),
+    ["author"],
+  );
 
 /* Comics guide */
 
@@ -207,12 +254,17 @@ export async function getCharacter(slug: string): Promise<Character | null> {
         appearsIn: ["comics", "tv"],
         portrayals: [{ _key: "p1", actor: "Placeholder Actor", production: "Placeholder Production" }],
         keyStorylines: demoArcs.slice(0, 2),
+        keyIssues: demoKeyIssues.slice(0, 2),
         readingRecommendations: [
           { _id: demoOrders[0]._id, _type: "readingOrder", title: demoOrders[0].title, slug: demoOrders[0].slug },
         ],
       }
     : null;
-  return sanityFetch<Character | null>(q.CHARACTER_QUERY, { slug }, pick(null, demoCharacter), ["character"]);
+  return sanityFetch<Character | null>(q.CHARACTER_QUERY, { slug }, pick(null, demoCharacter), [
+    "character",
+    "storyArc",
+    "keyIssue",
+  ]);
 }
 
 export const getCharacterSlugs = () =>
@@ -228,10 +280,11 @@ export async function getCorps(slug: string): Promise<Corps | null> {
         ...summary,
         keyFigures: ["Placeholder leader"],
         description: [block("Placeholder description of this Corps and what it stands for.")],
+        storylines: demoArcs.slice(0, 2),
         members: demoCharacters.filter((c) => c.corps?.slug === slug),
       }
     : null;
-  return sanityFetch<Corps | null>(q.CORPS_QUERY, { slug }, pick(null, demoItem), ["corps", "character"]);
+  return sanityFetch<Corps | null>(q.CORPS_QUERY, { slug }, pick(null, demoItem), ["corps", "character", "storyArc"]);
 }
 
 export const getCorpsSlugs = () =>

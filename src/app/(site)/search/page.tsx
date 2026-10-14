@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { search } from "@/sanity/data";
+import { pathFor } from "@/sanity/paths";
 import type { SearchHit } from "@/sanity/types";
 
 export const metadata: Metadata = {
@@ -17,20 +18,7 @@ const typeLabel: Record<SearchHit["_type"], string> = {
   corps: "Corps",
 };
 
-const hrefFor = (hit: SearchHit) => {
-  switch (hit._type) {
-    case "article":
-      return `/news/${hit.slug}`;
-    case "character":
-      return `/characters/${hit.slug}`;
-    case "storyArc":
-      return `/comics/arcs/${hit.slug}`;
-    case "readingOrder":
-      return `/comics/reading-orders/${hit.slug}`;
-    case "corps":
-      return `/corps/${hit.slug}`;
-  }
-};
+const hrefFor = (hit: SearchHit) => pathFor(hit._type, hit.slug);
 
 export default async function SearchPage({ searchParams }: PageProps<"/search">) {
   const raw = (await searchParams).q;

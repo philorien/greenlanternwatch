@@ -92,7 +92,7 @@ export const article = defineType({
       type: "object",
       group: "comic",
       description:
-        "Fill this in for new-release coverage so it appears in Latest Comics on the home page.",
+        "Fill this in for new-release coverage so it appears on the Comics page. To feature it in Latest Comics on the home page, link it from the issue's Comic issue document.",
       fields: [
         defineField({
           name: "title",

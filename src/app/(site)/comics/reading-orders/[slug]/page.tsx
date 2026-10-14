@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ReadingList } from "@/components/ReadingList";
+import { Wordmark, type WordmarkVariant } from "@/components/Logo";
+import { ComicVineCredit, ReadingList } from "@/components/ReadingList";
 import { RichText } from "@/components/RichText";
 import { BackLink, PageHeader } from "@/components/ui";
 import { getReadingOrder, getReadingOrderSlugs } from "@/sanity/data";
 
 export const revalidate = 60;
+
+const orderWordmarks: Record<string, WordmarkVariant> = {
+  "morrison-and-thorne-2018-2022": "the-green-lantern-2018",
+};
 
 export async function generateStaticParams() {
   const slugs = await getReadingOrderSlugs();
@@ -29,10 +34,12 @@ export default async function ReadingOrderPage({
   if (!order) notFound();
 
   let counter = 1;
+  const wordmark = orderWordmarks[slug];
 
   return (
     <div className="mx-auto max-w-3xl">
       <BackLink href="/comics">Comics guide</BackLink>
+      {wordmark ? <Wordmark variant={wordmark} className="mt-8 w-full max-w-xs" /> : null}
       <div className="mt-6">
         <PageHeader eyebrow="Reading order" title={order.title} intro={order.tagline} />
       </div>
@@ -44,13 +51,14 @@ export default async function ReadingOrderPage({
           counter += entries.length;
           return (
             <section key={section._key}>
-              <h2 className="font-display text-2xl font-extrabold">{section.title}</h2>
+              <h2 className="font-display text-2xl font-black">{section.title}</h2>
               {section.note ? <p className="mt-1 mb-4 text-muted">{section.note}</p> : <div className="mb-4" />}
               <ReadingList entries={entries} startAt={start} />
             </section>
           );
         })}
       </div>
+      <ComicVineCredit entries={order.sections?.flatMap((s) => s.entries ?? []) ?? []} />
     </div>
   );
 }
