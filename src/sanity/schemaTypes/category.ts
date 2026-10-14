@@ -6,6 +6,8 @@ export const category = defineType({
   title: "Category",
   type: "document",
   icon: TagIcon,
+  description:
+    "The site expects these slugs: comics, movies-tv, characters, features, reviews.",
   fields: [
     defineField({
       name: "title",
@@ -18,7 +20,24 @@ export const category = defineType({
       options: { source: "title", maxLength: 96 },
       validation: (rule) => rule.required(),
     }),
-    defineField({ name: "description", type: "text", rows: 3 }),
+    defineField({
+      name: "description",
+      type: "string",
+      description: "Short line shown in the Site Categories box.",
+    }),
+    defineField({
+      name: "order",
+      type: "number",
+      description: "Lower numbers appear first.",
+      initialValue: 100,
+    }),
+  ],
+  orderings: [
+    {
+      title: "Display order",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
   ],
   preview: { select: { title: "title", subtitle: "description" } },
 });

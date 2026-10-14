@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #06100b;
-  --color-surface: #0c1b14;
-  --color-surface-2: #12281d;
-  --color-line: #1d3b2c;
-  --color-text: #e6f2ea;
-  --color-muted: #8fae9c;
-  --color-glow: #3dff8f;
-  --color-glow-dim: #1fb866;
+  --color-ink: #030c09;
+  --color-surface: #071611;
+  --color-surface-2: #0b1f17;
+  --color-line: #143527;
+  --color-text: #e8f4ed;
+  --color-muted: #8aa89a;
+  --color-glow: #35e8a0;
+  --color-glow-dim: #1da872;
 
-  --font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Exo 2 Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 html {
@@ -19,7 +19,10 @@ html {
 }
 
 body {
-  background: var(--color-ink);
+  background:
+    radial-gradient(1200px 500px at 70% -10%, rgb(29 168 114 / 0.14), transparent 60%),
+    var(--color-ink);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -36,6 +39,51 @@ body {
   border-radius: 4px;
 }
 
+/* Emotional spectrum colors. Set data-spectrum on an element, then use --spec. */
+[data-spectrum="green"] { --spec: #2fe38a; }
+[data-spectrum="yellow"] { --spec: #f5d90a; }
+[data-spectrum="red"] { --spec: #ff4d4d; }
+[data-spectrum="blue"] { --spec: #4aa8ff; }
+[data-spectrum="violet"] { --spec: #c77dff; }
+[data-spectrum="orange"] { --spec: #ff9a2e; }
+[data-spectrum="indigo"] { --spec: #7b7bff; }
+[data-spectrum="black"] { --spec: #9aa3a0; }
+[data-spectrum="white"] { --spec: #f4f7f5; }
+
+.panel {
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-glow);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.section-title::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 2px;
+  background: var(--color-glow);
+  box-shadow: 0 0 10px var(--color-glow);
+}
+
 /* Rich text rendered from Portable Text */
 .rich-text {
   font-size: 1.0625rem;
@@ -47,14 +95,16 @@ body {
 }
 .rich-text h2 {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1.6rem;
+  font-weight: 700;
   line-height: 1.25;
   color: var(--color-text);
   margin-top: 2em;
 }
 .rich-text h3 {
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--color-text);
   margin-top: 1.75em;
 }
@@ -66,8 +116,7 @@ body {
 .rich-text blockquote {
   border-left: 3px solid var(--color-glow-dim);
   padding-left: 1.25rem;
-  font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   color: var(--color-text);
 }
 .rich-text ul,

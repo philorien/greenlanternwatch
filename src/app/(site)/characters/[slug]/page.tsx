@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { StoryArcCard } from "@/components/cards";
 import { RichText } from "@/components/RichText";
-import { SanityImage } from "@/components/SanityImage";
-import { Tag } from "@/components/ui";
-import { sanityFetch } from "@/sanity/client";
-import { CHARACTER_QUERY, CHARACTER_SLUGS_QUERY } from "@/sanity/queries";
-import type { Character } from "@/sanity/types";
+import { Thumb } from "@/components/Thumb";
+import { BackLink, SectionTitle, SpectrumDot, Tag } from "@/components/ui";
+import { getCharacter, getCharacterSlugs } from "@/sanity/data";
 
 export const revalidate = 60;
 
@@ -19,19 +18,8 @@ const mediumLabel: Record<string, string> = {
 };
 
 export async function generateStaticParams() {
-  const slugs = await sanityFetch<{ slug: string }[]>(
-    CHARACTER_SLUGS_QUERY,
-    {},
-    [],
-    ["character"],
-  );
+  const slugs = await getCharacterSlugs();
   return slugs.map(({ slug }) => ({ slug }));
-}
-
-async function getCharacter(slug: string) {
-  return sanityFetch<Character | null>(CHARACTER_QUERY, { slug }, null, [
-    "character",
-  ]);
 }
 
 export async function generateMetadata({
@@ -52,46 +40,39 @@ export default async function CharacterPage({
   params,
 }: PageProps<"/characters/[slug]">) {
   const { slug } = await params;
-  const character = await getCharacter(slug);
-  if (!character) notFound();
+  const c = await getCharacter(slug);
+  if (!c) notFound();
 
   const facts = [
-    character.alias ? ["Alias", character.alias] : null,
-    character.species ? ["Species", character.species] : null,
-    character.homeSector ? ["Home sector", character.homeSector] : null,
-    character.firstAppearance
-      ? ["First appearance", character.firstAppearance]
-      : null,
+    c.alias ? ["Alias", c.alias] : null,
+    c.species ? ["Species", c.species] : null,
+    c.homeSector ? ["Home sector", c.homeSector] : null,
+    c.firstAppearance ? ["First appearance", c.firstAppearance] : null,
   ].filter((f): f is string[] => f !== null);
 
   return (
     <div className="mx-auto max-w-4xl">
-      <Link
-        href="/characters"
-        className="text-sm text-muted transition-colors hover:text-glow"
-      >
-        &larr; All characters
-      </Link>
+      <BackLink href="/characters">All characters</BackLink>
       <div className="mt-6 flex flex-col gap-8 sm:flex-row">
-        {character.portrait?.asset ? (
-          <SanityImage
-            image={character.portrait}
-            width={320}
-            height={400}
-            priority
-            className="h-auto w-56 shrink-0 self-start rounded-lg border border-line object-cover"
-          />
-        ) : null}
+        <Thumb
+          image={c.portrait}
+          aspect="aspect-[4/5]"
+          className="w-56 shrink-0 self-start rounded-lg border border-line"
+          sizes="224px"
+          width={560}
+          priority
+        />
         <div>
-          <h1 className="font-display text-4xl leading-tight sm:text-5xl">
-            {character.name}
+          <h1 className="font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+            {c.name}
           </h1>
-          {character.corps ? (
+          {c.corps ? (
             <Link
-              href={`/corps/${character.corps.slug}`}
-              className="mt-3 inline-block text-glow underline underline-offset-4"
+              href={`/corps/${c.corps.slug}`}
+              className="mt-3 inline-flex items-center gap-2 text-glow hover:underline"
             >
-              {character.corps.name}
+              <SpectrumDot spectrum={c.corps.spectrum} />
+              {c.corps.name}
             </Link>
           ) : null}
           {facts.length > 0 ? (
@@ -104,18 +85,76 @@ export default async function CharacterPage({
               ))}
             </dl>
           ) : null}
-          {character.appearsIn && character.appearsIn.length > 0 ? (
+          {c.appearsIn && c.appearsIn.length > 0 ? (
             <div className="mt-6 flex flex-wrap gap-2">
-              {character.appearsIn.map((m) => (
+              {c.appearsIn.map((m) => (
                 <Tag key={m}>{mediumLabel[m] ?? m}</Tag>
               ))}
             </div>
           ) : null}
+          {c.portrayals && c.portrayals.length > 0 ? (
+            <ul className="mt-6 space-y-1 text-sm">
+              {c.portrayals.map((p) => (
+                <li key={p._key}>
+                  <span className="font-semibold">{p.actor}</span>{" "}
+                  <span className="text-muted">in {p.production}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </div>
-      <div className="mt-12 max-w-3xl">
-        <RichText value={character.bio} />
+
+      <div className="mt-12 max-w-3xl space-y-12">
+        <RichText value={c.bio} />
+
+        {c.abilities && c.abilities.length > 0 ? (
+          <section>
+            <h2 className="mb-3 font-display text-2xl font-extrabold">Powers and abilities</h2>
+            <RichText value={c.abilities} />
+          </section>
+        ) : null}
+
+        {c.constructStyle ? (
+          <section>
+            <h2 className="mb-3 font-display text-2xl font-extrabold">Construct style</h2>
+            <p className="text-text/85">{c.constructStyle}</p>
+          </section>
+        ) : null}
       </div>
+
+      {c.keyStorylines && c.keyStorylines.length > 0 ? (
+        <section className="mt-14">
+          <SectionTitle>Key storylines</SectionTitle>
+          <div className="grid gap-4 md:grid-cols-2">
+            {c.keyStorylines.map((a) => (
+              <StoryArcCard key={a._id} arc={a} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {c.readingRecommendations && c.readingRecommendations.length > 0 ? (
+        <section className="mt-14">
+          <SectionTitle>Where to read</SectionTitle>
+          <ul className="space-y-2">
+            {c.readingRecommendations.map((r) => (
+              <li key={r._id}>
+                <Link
+                  href={
+                    r._type === "readingOrder"
+                      ? `/comics/reading-orders/${r.slug}`
+                      : `/comics/arcs/${r.slug}`
+                  }
+                  className="text-glow hover:underline"
+                >
+                  {r.title} &rarr;
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </div>
   );
 }
