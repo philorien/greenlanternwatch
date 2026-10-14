@@ -8,7 +8,7 @@ import { schemaTypes } from "./src/sanity/schemaTypes";
 
 export default defineConfig({
   name: "default",
-  title: "Green Lantern Fan Site",
+  title: "Green Lantern Watch",
   basePath: "/studio",
   projectId: projectId || "unconfigured",
   dataset,

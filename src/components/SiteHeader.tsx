@@ -15,7 +15,7 @@ export function SiteHeader() {
           className="font-display text-lg tracking-wide text-text"
         >
           <span className="text-glow">&#9679;</span> Green Lantern{" "}
-          <span className="text-muted">Fan Site</span>
+          <span className="text-glow">Watch</span>
         </Link>
         <nav aria-label="Primary" className="flex gap-5 text-sm sm:gap-8">
           {links.map((link) => (

@@ -1,4 +1,6 @@
-# Green Lantern Fan Site
+# Green Lantern Watch
+
+greenlanternwatch.com
 
 Next.js (App Router) + Tailwind CSS v4 + Sanity + Vercel.
 
@@ -10,7 +12,7 @@ Content: news articles, a tiered comics reading guide, and character and Corps p
 
    ```bash
    npx sanity login
-   npx sanity init --env --create-project "Green Lantern Fan Site" --dataset production
+   npx sanity init --env --create-project "Green Lantern Watch" --dataset production
    ```
 
    If `init` tries to scaffold files, decline. You only need the project ID.
@@ -40,8 +42,9 @@ The site builds and runs without a project ID. Pages show empty states until con
 1. Push this repo to GitHub.
 2. Import it in Vercel. The framework preset is detected automatically.
 3. Add the same two environment variables under Project Settings, Environment Variables.
-4. Add the Vercel production URL (and your custom domain) as a CORS origin in Sanity with credentials allowed.
-5. Optional: set `NEXT_PUBLIC_SITE_URL` to your canonical domain so metadata URLs are correct.
+4. Add `greenlanternwatch.com` under Project Settings, Domains, and point DNS at Vercel as it instructs. Add the www variant and redirect one to the other.
+5. Add `https://greenlanternwatch.com` (and the `www` variant) as CORS origins in Sanity with credentials allowed, so `/studio` works in production.
+6. `NEXT_PUBLIC_SITE_URL` defaults to `https://greenlanternwatch.com` in production builds. Override it only if the canonical domain changes.
 
 Content updates show up within 60 seconds (ISR). For instant updates, add a Sanity webhook that calls a revalidation route (not built yet).
 

@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.NODE_ENV === "production"
+    ? "https://greenlanternwatch.com"
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ??
-      (process.env.VERCEL_PROJECT_PRODUCTION_URL
-        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-        : "http://localhost:3000"),
-  ),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Green Lantern Fan Site",
-    template: "%s | Green Lantern Fan Site",
+    default: "Green Lantern Watch",
+    template: "%s | Green Lantern Watch",
   },
   description:
-    "Fan coverage of Green Lantern across the TV show, movies and comics, with a reading guide, character profiles and news.",
+    "Green Lantern Watch covers the TV show, movies and comics, with news, a comics reading guide and character profiles.",
+  openGraph: {
+    siteName: "Green Lantern Watch",
+    type: "website",
+    url: siteUrl,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
