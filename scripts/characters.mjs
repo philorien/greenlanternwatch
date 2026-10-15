@@ -4,8 +4,9 @@
 //   npx sanity dataset import /tmp/characters.ndjson --dataset production --replace
 //
 // Document IDs are fixed, so re-running the import replaces these documents in place.
-// Corps and reading orders are referenced by the fixed IDs from scripts/corps.mjs and
-// scripts/modern-green-lantern-reading-orders.mjs, so import those first.
+// Corps and reading orders are referenced by the fixed IDs from scripts/corps.mjs,
+// scripts/modern-green-lantern-reading-orders.mjs and scripts/character-reading-orders.mjs,
+// so import those first.
 // Bio and ability lines starting with "## " become headings and "- " become bullets.
 
 import { createHash } from "node:crypto";
@@ -29,6 +30,7 @@ const reading = {
   rebirth: "reading-order-modern-gl-rebirth",
   morrison: "reading-order-modern-gl-morrison-thorne",
   dawn: "reading-order-modern-gl-dawn-of-dc-all-in",
+  kyle: "reading-order-character-kyle-rayner",
 };
 
 const characters = [
@@ -116,7 +118,7 @@ const characters = [
     homeSector: "Sector 2814 (Los Angeles, Earth)",
     firstAppearance: "Green Lantern #48 (1994)",
     appearsIn: ["comics", "animation", "games"],
-    reading: ["johns", "new52"],
+    reading: ["kyle", "johns", "new52"],
     bio: [
       "When the Corps fell in the 1990s, Ganthet gave the last ring to a freelance artist named Kyle Rayner. For years he was the only Green Lantern, and he rebuilt the Corps' legacy almost on his own.",
       "Kyle's imagination makes him unique among Lanterns. He later became the first being to master every color of the emotional spectrum, which made him the White Lantern.",

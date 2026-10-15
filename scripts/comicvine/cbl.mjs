@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const CBL_FILES = [
   "../data/modern-green-lantern-complete.cbl",
   "../data/modern-green-lantern-out-of-continuity.cbl",
+  "../data/kyle-rayner.cbl",
 ];
 
 const decode = (s) =>

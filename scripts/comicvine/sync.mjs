@@ -5,10 +5,11 @@
 //   node scripts/comicvine/fetch.mjs
 //   set -a; source .env.local; set +a
 //   npx sanity exec scripts/comicvine/sync.mjs --with-user-token
+//   npx sanity exec scripts/comicvine/sync.mjs --with-user-token -- --only <document id>
 //
 // Only the ComicVine fields are written, so notes and other edits are kept. Covers
 // are uploaded once and reused on later runs. Entries that aren't in the CBL lists
-// are skipped.
+// are skipped. --only limits the run to one reading order or story arc.
 
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -25,6 +26,8 @@ const index = loadCblIndex();
 const client = getCliClient({ apiVersion: "2026-10-14" }).withConfig({ perspective: "raw" });
 
 const MAX_CREDITED = 3;
+const onlyArg = process.argv.indexOf("--only");
+const only = onlyArg === -1 ? null : process.argv[onlyArg + 1];
 const releaseDate = (issue) => issue.storeDate ?? issue.coverDate;
 
 function topCreators(ids, matchesRole) {
@@ -81,7 +84,8 @@ const docs = [
     needsCover: !doc.hasCover,
     entries: (doc.readingList ?? []).map((e) => [`readingList[_key=="${e._key}"]`, e]),
   })),
-];
+].filter((doc) => !only || doc._id === only);
+if (only && docs.length === 0) throw new Error(`No reading order or story arc with id "${only}"`);
 
 let entriesUpdated = 0;
 let entriesWithCredits = 0;
