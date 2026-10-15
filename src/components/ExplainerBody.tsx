@@ -1,4 +1,7 @@
+import Image from "next/image";
 import type { ExplainerBlock, ExplainerSection } from "@/content/explainers";
+import { urlFor } from "@/sanity/image";
+import type { SanityImage } from "@/sanity/types";
 
 function Thesis({ kicker, text }: { kicker: string; text: string }) {
   return (
@@ -101,6 +104,29 @@ function Compare({
   );
 }
 
+/** Shown at its own shape. Sanity asset IDs carry the size, for example image-…-842x230-webp. */
+function Figure({ image }: { image: SanityImage }) {
+  const size = image.asset?._ref.match(/-(\d+)x(\d+)-\w+$/);
+  if (!size) return null;
+  return (
+    <figure>
+      <Image
+        src={urlFor(image).auto("format").url()}
+        alt={image.alt ?? ""}
+        width={Number(size[1])}
+        height={Number(size[2])}
+        sizes="(min-width: 768px) 768px, 100vw"
+        className="h-auto w-full rounded-lg border border-line"
+      />
+      {image.caption || image.credit ? (
+        <figcaption className="mt-2 text-sm text-muted">
+          {[image.caption, image.credit].filter(Boolean).join("  •  ")}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
 function ReadingList({ items }: { items: { title: string; note: string }[] }) {
   return (
     <ol className="list-none border-b border-line pl-0">
@@ -171,6 +197,8 @@ function Block({ block }: { block: ExplainerBlock }) {
       return <Compare caption={block.caption} columns={block.columns} rows={block.rows} />;
     case "reading":
       return <ReadingList items={block.items} />;
+    case "image":
+      return <Figure image={block.image} />;
     default: {
       const unreachable: never = block;
       return unreachable;

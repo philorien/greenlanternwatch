@@ -89,6 +89,10 @@ function mapBlock(block: Record<string, unknown>): ExplainerBlock | null {
         .filter((item) => item.title && item.note);
       return items.length > 0 ? { type: "reading", items } : null;
     }
+    case "explainerImage": {
+      const { asset, hotspot, alt, caption, credit } = block as SanityImage;
+      return asset?._ref ? { type: "image", image: { asset, hotspot, alt, caption, credit } } : null;
+    }
     default:
       return null;
   }

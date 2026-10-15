@@ -406,6 +406,8 @@ const demoBlock = (block: (typeof demoExplainers)[number]["sections"][number]["b
       };
     case "reading":
       return { _type: "explainerReading", items: block.items };
+    case "image":
+      return { _type: "explainerImage", ...block.image };
     default: {
       const unreachable: never = block;
       return unreachable;

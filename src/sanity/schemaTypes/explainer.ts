@@ -291,6 +291,27 @@ export const explainer = defineType({
                   },
                 }),
                 defineArrayMember({
+                  name: "explainerImage",
+                  type: "image",
+                  title: "Image",
+                  options: { hotspot: true },
+                  fields: [
+                    defineField({
+                      name: "alt",
+                      type: "string",
+                      title: "Alt text",
+                      validation: (rule) => rule.required(),
+                    }),
+                    defineField({ name: "caption", type: "string" }),
+                    defineField({
+                      name: "credit",
+                      type: "string",
+                      description: "Who owns the image, for example the studio or artist.",
+                    }),
+                  ],
+                  preview: { select: { title: "caption", subtitle: "alt", media: "asset" } },
+                }),
+                defineArrayMember({
                   name: "explainerReading",
                   type: "object",
                   title: "Reading list",

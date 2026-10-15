@@ -85,6 +85,8 @@ function block(docId, sectionKey, block, index) {
           note: item.note,
         })),
       };
+    case "image":
+      return { _key: blockKey, _type: "explainerImage", ...block.image };
     default: {
       const unreachable = block;
       throw new Error(`Unknown explainer block: ${unreachable?.type}`);

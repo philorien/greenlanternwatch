@@ -35,7 +35,8 @@ export type ExplainerBlock =
       columns: [string, string];
       rows: ExplainerCompareRow[];
     }
-  | { type: "reading"; items: ExplainerReading[] };
+  | { type: "reading"; items: ExplainerReading[] }
+  | { type: "image"; image: SanityImage };
 
 export type ExplainerSection = {
   id: string;
@@ -312,6 +313,8 @@ function blockText(block: ExplainerBlock): string {
       return block.rows.map((row) => `${row.label} ${row.left} ${row.right}`).join(" ");
     case "reading":
       return block.items.map((item) => `${item.title} ${item.note}`).join(" ");
+    case "image":
+      return [block.image.alt, block.image.caption].filter(Boolean).join(" ");
     default: {
       const unreachable: never = block;
       return unreachable;
