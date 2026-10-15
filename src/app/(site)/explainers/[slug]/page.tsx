@@ -37,6 +37,7 @@ export async function generateMetadata({
     path: `/explainers/${slug}`,
     image: explainer.mainImage,
     publishedTime: explainer.publishedAt,
+    modifiedTime: explainer.updatedAt,
     section: "Features",
   });
 }
@@ -61,6 +62,7 @@ export default async function ExplainerPage({ params }: PageProps<"/explainers/[
             description: describe(explainer.dek),
             image: explainer.mainImage?.asset ? [shareImage(explainer.mainImage).url] : undefined,
             datePublished: explainer.publishedAt,
+            dateModified: explainer.updatedAt ?? explainer.publishedAt,
             articleSection: "Features",
             author: explainer.author
               ? {

@@ -39,11 +39,21 @@ export function shareImage(image?: SanityImage, fallbackAlt?: string, fit: Image
 }
 
 const DESCRIPTION_LIMIT = 160;
+// Below this, a whole first sentence says too little, so cut mid-sentence instead.
+const MIN_SENTENCE_DESCRIPTION = 70;
 
 /** First non-empty candidate, trimmed to a search-snippet length on a word boundary. */
+/** Shortest-safe description: whole sentences when they fit, else cut at a word. */
 export function describe(...candidates: (string | null | undefined)[]) {
   const text = candidates.find((c) => c?.trim())?.replace(/\s+/g, " ").trim();
   if (!text || text.length <= DESCRIPTION_LIMIT) return text;
+  const sentences = text.match(/[^.!?]+[.!?]+(?=\s|$)/g) ?? [];
+  let whole = "";
+  for (const sentence of sentences) {
+    if ((whole + sentence).trim().length > DESCRIPTION_LIMIT) break;
+    whole += sentence;
+  }
+  if (whole.trim().length >= MIN_SENTENCE_DESCRIPTION) return whole.trim();
   const cut = text.slice(0, DESCRIPTION_LIMIT - 1);
   return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
 }

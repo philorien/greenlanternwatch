@@ -49,6 +49,7 @@ export type Explainer = {
   title: string;
   dek: string;
   publishedAt: string;
+  updatedAt?: string;
   mainImage?: SanityImage;
   author?: { name: string; slug?: string };
   sections: ExplainerSection[];
@@ -67,7 +68,7 @@ const manhunters: Explainer = {
       blocks: [
         {
           type: "paragraph",
-          text: "The Manhunters are a robot army. In DC lore, the Guardians created them as their first attempt at a cosmic police force, billions of years before the power rings that define the Green Lantern Corps. They did the job well for a long time. Then they came to resent their servitude and the moral limits the Guardians set on them, rebelled, and were replaced by the Corps, a force of living beings who run on willpower instead of programming.",
+          text: "The Manhunters are a robot army. In DC lore, the Guardians created them as their first attempt at a cosmic police force, billions of years before the power rings that define the [Green Lantern Corps](/corps/green-lantern-corps). They did the job well for a long time. Then they came to resent their servitude and the moral limits the Guardians set on them, rebelled, and were replaced by the Corps, a force of living beings who run on willpower instead of programming.",
         },
         { type: "paragraph", text: "A few things define them:" },
         {
@@ -135,19 +136,19 @@ const manhunters: Explainer = {
           rows: [
             {
               when: "Aug 2026",
-              what: "HBO's Lanterns makes the Manhunters its main antagonists, depicting them as shape-shifting infiltrators. Based on the trailers and pre-release coverage.",
+              what: "[HBO's Lanterns](/movies-tv) makes the Manhunters its main antagonists, depicting them as shape-shifting infiltrators. Based on the trailers and pre-release coverage.",
             },
             {
               when: "2008",
-              what: "Green Lantern #25 ties Atrocitus, future leader of the Red Lanterns, to the Manhunters, who devastated his sector.",
+              what: "Green Lantern #25 ties [Atrocitus](/characters/atrocitus), future leader of the [Red Lanterns](/corps/red-lantern-corps), to the Manhunters, who devastated his sector.",
             },
             {
               when: "2006",
-              what: "Green Lantern vol. 4 #10-13 sends Hal Jordan and Guy Gardner into Sector 3601 and re-establishes the Manhunters as a modern threat.",
+              what: "Green Lantern vol. 4 #10-13 sends [Hal Jordan](/characters/hal-jordan) and [Guy Gardner](/characters/guy-gardner) into Sector 3601 and re-establishes the Manhunters as a modern threat.",
             },
             {
               when: "1977",
-              what: 'Justice League of America #140-141, "No Man Escapes the Manhunters," shows them framing a Green Lantern for destroying a planet. The Justice League animated series later adapted it with John Stewart.',
+              what: 'Justice League of America #140-141, "No Man Escapes the Manhunters," shows them framing a Green Lantern for destroying a planet. The Justice League animated series later adapted it with [John Stewart](/characters/john-stewart).',
             },
             {
               when: "Aug 1975",
@@ -264,10 +265,10 @@ const manhunters: Explainer = {
             },
             {
               title: "Green Lantern vol. 3 #129-131",
-              note: "A Manhunter faction resurfaces when Kyle Rayner is the only Green Lantern left.",
+              note: "A Manhunter faction resurfaces when [Kyle Rayner](/characters/kyle-rayner) is the only Green Lantern left.",
             },
             {
-              title: "Green Lantern vol. 4 #10-13 (2006)",
+              title: "[Green Lantern vol. 4 #10-13 (2006)](/comics/reading-orders/geoff-johns-era-2004-2011)",
               note: "The modern relaunch of the threat, set in Sector 3601.",
             },
             {
@@ -275,7 +276,7 @@ const manhunters: Explainer = {
               note: "Atrocitus and the Manhunter connection to the Red Lanterns.",
             },
             {
-              title: "Green Lantern: Earth One",
+              title: "[Green Lantern: Earth One](/comics/reading-orders/green-lantern-out-of-continuity-2011-now)",
               note: "A different take that gives the Manhunters a very different place in the Corps' history.",
             },
             {
@@ -322,10 +323,15 @@ function blockText(block: ExplainerBlock): string {
   }
 }
 
+/** Explainer text with [words](/path) links reduced to their words. */
+export const plainText = (text: string) => text.replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1");
+
 export function explainerText(explainer: Explainer) {
-  return explainer.sections
-    .flatMap((section) => [section.title, ...section.blocks.map(blockText)])
-    .join(" ");
+  return plainText(
+    explainer.sections
+      .flatMap((section) => [section.title, ...section.blocks.map(blockText)])
+      .join(" "),
+  );
 }
 
 /** Same ratio the article pages use for Sanity body length. */

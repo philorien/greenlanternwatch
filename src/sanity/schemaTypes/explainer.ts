@@ -1,12 +1,15 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { BookIcon } from "@sanity/icons/Book";
 
+const LINK_HINT = "Plain text. To link, write [words](/characters/hal-jordan).";
+
 const textItem = (name: string, title: string) =>
   defineField({
     name,
     title,
     type: "text",
     rows: 3,
+    description: LINK_HINT,
     validation: (rule) => rule.required(),
   });
 
@@ -219,6 +222,7 @@ export const explainer = defineType({
                               name: "definition",
                               type: "text",
                               rows: 2,
+                              description: LINK_HINT,
                               validation: (rule) => rule.required(),
                             }),
                           ],
@@ -270,12 +274,14 @@ export const explainer = defineType({
                               name: "left",
                               type: "text",
                               rows: 2,
+                              description: LINK_HINT,
                               validation: (rule) => rule.required(),
                             }),
                             defineField({
                               name: "right",
                               type: "text",
                               rows: 2,
+                              description: LINK_HINT,
                               validation: (rule) => rule.required(),
                             }),
                           ],
@@ -333,6 +339,7 @@ export const explainer = defineType({
                               name: "note",
                               type: "text",
                               rows: 2,
+                              description: LINK_HINT,
                               validation: (rule) => rule.required(),
                             }),
                           ],

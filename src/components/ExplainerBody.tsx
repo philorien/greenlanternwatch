@@ -1,14 +1,42 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { ExplainerBlock, ExplainerSection } from "@/content/explainers";
 import { urlFor } from "@/sanity/image";
 import type { SanityImage } from "@/sanity/types";
+
+const LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+const linkClass = "text-glow underline underline-offset-[3px]";
+
+/** Explainer text is plain, apart from links written as [words](/path). */
+function Inline({ text }: { text: string }) {
+  const parts: React.ReactNode[] = [];
+  let last = 0;
+  for (const match of text.matchAll(LINK)) {
+    const [whole, label, href] = match;
+    parts.push(text.slice(last, match.index));
+    parts.push(
+      href.startsWith("/") ? (
+        <Link key={match.index} href={href} className={linkClass}>
+          {label}
+        </Link>
+      ) : (
+        <a key={match.index} href={href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+          {label}
+        </a>
+      ),
+    );
+    last = match.index + whole.length;
+  }
+  parts.push(text.slice(last));
+  return <>{parts}</>;
+}
 
 function Thesis({ kicker, text }: { kicker: string; text: string }) {
   return (
     <p className="border-l-[3px] border-glow-dim pl-5">
       <span className="eyebrow mb-2 block">{kicker}</span>
       <span className="block font-display text-xl font-extrabold leading-snug text-text sm:text-2xl">
-        {text}
+        <Inline text={text} />
       </span>
     </p>
   );
@@ -50,7 +78,9 @@ function Timeline({
               >
                 {row.when}
               </th>
-              <td className="py-4 align-top text-[0.975rem] leading-relaxed">{row.what}</td>
+              <td className="py-4 align-top text-[0.975rem] leading-relaxed">
+                <Inline text={row.what} />
+              </td>
             </tr>
           ))}
         </tbody>
@@ -94,8 +124,12 @@ function Compare({
               >
                 {row.label}
               </th>
-              <td className="py-3 pr-3 align-top leading-relaxed sm:pr-6">{row.left}</td>
-              <td className="py-3 align-top leading-relaxed">{row.right}</td>
+              <td className="py-3 pr-3 align-top leading-relaxed sm:pr-6">
+                <Inline text={row.left} />
+              </td>
+              <td className="py-3 align-top leading-relaxed">
+                <Inline text={row.right} />
+              </td>
             </tr>
           ))}
         </tbody>
@@ -139,8 +173,12 @@ function ReadingList({ items }: { items: { title: string; note: string }[] }) {
             {String(index + 1).padStart(2, "0")}
           </span>
           <div>
-            <p className="font-display text-lg font-extrabold leading-snug text-text">{item.title}</p>
-            <p className="mt-1 text-sm text-muted">{item.note}</p>
+            <p className="font-display text-lg font-extrabold leading-snug text-text">
+              <Inline text={item.title} />
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              <Inline text={item.note} />
+            </p>
           </div>
         </li>
       ))}
@@ -151,13 +189,20 @@ function ReadingList({ items }: { items: { title: string; note: string }[] }) {
 function Block({ block }: { block: ExplainerBlock }) {
   switch (block.type) {
     case "paragraph":
-      return <p>{block.text}</p>;
+      return (
+        <p>
+          <Inline text={block.text} />
+        </p>
+      );
     case "points":
       return (
         <ul>
           {block.items.map((item) => (
             <li key={item.lead}>
-              <strong className="font-semibold text-text">{item.lead}</strong> {item.text}
+              <strong className="font-semibold text-text">
+                <Inline text={item.lead} />
+              </strong>{" "}
+              <Inline text={item.text} />
             </li>
           ))}
         </ul>
@@ -166,7 +211,9 @@ function Block({ block }: { block: ExplainerBlock }) {
       return (
         <ol>
           {block.items.map((item) => (
-            <li key={item}>{item}</li>
+            <li key={item}>
+              <Inline text={item} />
+            </li>
           ))}
         </ol>
       );
@@ -188,7 +235,9 @@ function Block({ block }: { block: ExplainerBlock }) {
                   <span className="mt-0.5 block text-sm text-muted">{item.qualifier}</span>
                 ) : null}
               </dt>
-              <dd>{item.definition}</dd>
+              <dd>
+                <Inline text={item.definition} />
+              </dd>
             </div>
           ))}
         </dl>

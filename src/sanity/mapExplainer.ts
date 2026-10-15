@@ -7,6 +7,7 @@ export type SanityExplainerDoc = {
   slug?: string | null;
   dek?: string | null;
   publishedAt?: string | null;
+  updatedAt?: string | null;
   mainImage?: SanityImage | null;
   author?: { name?: string | null; slug?: string | null } | null;
   sections?:
@@ -121,6 +122,7 @@ export function mapExplainer(doc: SanityExplainerDoc): Explainer | null {
     title: doc.title,
     dek: text(doc.dek),
     publishedAt: doc.publishedAt,
+    updatedAt: doc.updatedAt ?? undefined,
     mainImage: doc.mainImage?.asset ? doc.mainImage : undefined,
     author: doc.author?.name
       ? { name: doc.author.name, slug: doc.author.slug ?? undefined }
