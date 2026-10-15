@@ -1,6 +1,6 @@
 import { site } from "@/config/site";
 import { absoluteUrl, describe } from "@/lib/seo";
-import { getCharacters, getComicsHub, getNews } from "@/sanity/data";
+import { getCharacters, getComicsHub, getExplainers, getNews } from "@/sanity/data";
 import { pathFor } from "@/sanity/paths";
 
 export const revalidate = 3600;
@@ -30,12 +30,22 @@ const guides: Link[] = [
     description: "Every film and show built around a Green Lantern, and the ones where a Lantern appears.",
   },
   { title: "Characters", path: "/characters", description: "Profiles of the Lanterns, their allies and their enemies." },
+  {
+    title: "Features",
+    path: "/category/features",
+    description: "Explainers, histories and longer reads on the corners of the mythos.",
+  },
   { title: "The emotional spectrum", path: "/corps", description: "Every Corps, the emotion that powers it, and who carries its rings." },
   { title: "About", path: "/about", description: "Who runs the site, how we source facts, and how corrections work." },
 ];
 
 export async function GET() {
-  const [hub, { characters, corps }, news] = await Promise.all([getComicsHub(), getCharacters(), getNews()]);
+  const [hub, { characters, corps }, news, explainers] = await Promise.all([
+    getComicsHub(),
+    getCharacters(),
+    getNews(),
+    getExplainers(),
+  ]);
 
   const body = [
     `# ${site.name}`,
@@ -45,6 +55,27 @@ export async function GET() {
     "Green Lantern Watch is not affiliated with DC or Warner Bros. Discovery. Issue numbers, release dates and creator credits come from the books and from ComicVine; news stories link to the original announcement and label rumors as rumors. Newcomers should start with the reading orders below.",
     "",
     ...section("Guides", guides),
+    ...section(
+      "Features",
+      [
+        ...explainers.map((explainer) => ({
+          title: explainer.title,
+          path: `/explainers/${explainer.slug}`,
+          description: explainer.dek,
+          date: explainer.publishedAt,
+        })),
+        ...news
+          .filter((article) => article.category?.slug === "features")
+          .map((article) => ({
+            title: article.title,
+            path: pathFor("article", article.slug),
+            description: article.excerpt,
+            date: article.publishedAt,
+          })),
+      ]
+        .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+        .map(({ title, path, description }) => ({ title, path, description })),
+    ),
     ...section(
       "Reading orders",
       hub.orders.map((o) => ({ title: o.title, path: pathFor("readingOrder", o.slug), description: o.tagline })),

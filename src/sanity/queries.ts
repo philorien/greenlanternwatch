@@ -253,8 +253,40 @@ export const CORPS_SLUGS_QUERY = defineQuery(/* groq */ `
   *[_type == "corps" && defined(slug.current)]{ "slug": slug.current }
 `);
 
+const explainerDoc = /* groq */ `
+  _id,
+  title,
+  "slug": slug.current,
+  dek,
+  publishedAt,
+  "author": author->{ name, "slug": slug.current },
+  sections[]{
+    _key,
+    title,
+    anchor,
+    blocks[]{
+      ...,
+      items[]{ ... },
+      rows[]{ ... }
+    }
+  }
+`;
+
+export const EXPLAINERS_QUERY = defineQuery(/* groq */ `
+  *[_type == "explainer" && defined(slug.current)]
+    | order(publishedAt desc){ ${explainerDoc} }
+`);
+
+export const EXPLAINER_QUERY = defineQuery(/* groq */ `
+  *[_type == "explainer" && slug.current == $slug][0]{ ${explainerDoc} }
+`);
+
+export const EXPLAINER_SLUGS_QUERY = defineQuery(/* groq */ `
+  *[_type == "explainer" && defined(slug.current)]{ "slug": slug.current }
+`);
+
 export const SITEMAP_QUERY = defineQuery(/* groq */ `
-  *[_type in ["article", "character", "storyArc", "readingOrder", "corps", "category", "author"]
+  *[_type in ["article", "explainer", "character", "storyArc", "readingOrder", "corps", "category", "author"]
       && defined(slug.current) && !(_id in path("drafts.**"))]{
     _type,
     "slug": slug.current,
@@ -263,14 +295,20 @@ export const SITEMAP_QUERY = defineQuery(/* groq */ `
 `);
 
 export const SEARCH_QUERY = defineQuery(/* groq */ `
-  *[_type in ["article", "character", "storyArc", "readingOrder", "corps"]
+  *[_type in ["article", "explainer", "character", "storyArc", "readingOrder", "corps"]
       && defined(slug.current)
-      && (title match $q || name match $q || excerpt match $q || tagline match $q)]
+      && (
+        title match $q || name match $q || excerpt match $q || tagline match $q || dek match $q
+        || sections[].blocks[].text match $q
+        || sections[].blocks[].items[].text match $q
+        || sections[].blocks[].items[].lead match $q
+        || sections[].blocks[].rows[].what match $q
+      )]
     | order(_type asc){
       _id,
       _type,
       "title": coalesce(title, name),
       "slug": slug.current,
-      "excerpt": coalesce(excerpt, tagline)
+      "excerpt": coalesce(excerpt, tagline, dek)
     }[0...40]
 `);

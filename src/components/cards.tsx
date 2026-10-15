@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Explainer } from "@/content/explainers";
 import type {
   ArticleSummary,
   CharacterSummary,
@@ -63,6 +64,38 @@ export function ArticleCard({ article }: { article: ArticleSummary }) {
         ) : null}
         <div className="mt-auto pt-2">
           <Byline article={article} />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/** Same card as an article, for an explainer filed under Features. */
+export function ExplainerCard({
+  explainer,
+  readMinutes,
+}: {
+  explainer: Explainer;
+  readMinutes?: number;
+}) {
+  return (
+    <Link
+      href={`/explainers/${explainer.slug}`}
+      className="panel group flex flex-col overflow-hidden transition-colors hover:border-glow-dim"
+    >
+      <Thumb aspect="aspect-[16/9]" className="rounded-none" sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" />
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <CategoryLabel>Features</CategoryLabel>
+        <h3 className="font-display text-lg font-bold leading-snug transition-colors group-hover:text-glow">
+          {explainer.title}
+        </h3>
+        <p className="line-clamp-3 text-sm text-muted">{explainer.dek}</p>
+        <div className="mt-auto pt-2">
+          <p className="text-xs text-muted">
+            {[explainer.author ? `By ${explainer.author.name}` : null, readMinutes ? `${readMinutes} min read` : null]
+              .filter(Boolean)
+              .join("  •  ")}
+          </p>
         </div>
       </div>
     </Link>

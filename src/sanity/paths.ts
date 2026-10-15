@@ -1,5 +1,6 @@
 export type LinkableType =
   | "article"
+  | "explainer"
   | "character"
   | "storyArc"
   | "readingOrder"
@@ -11,6 +12,8 @@ export function pathFor(type: LinkableType, slug: string) {
   switch (type) {
     case "article":
       return `/news/${slug}`;
+    case "explainer":
+      return `/explainers/${slug}`;
     case "character":
       return `/characters/${slug}`;
     case "storyArc":

@@ -1,4 +1,5 @@
 import type { QueryParams } from "next-sanity";
+import { explainers as demoExplainers, explainersMatching } from "@/content/explainers";
 import { sanityFetch } from "./client";
 import {
   block,
@@ -13,6 +14,7 @@ import {
   demoOrders,
   isDemo,
 } from "./demo";
+import { mapExplainer, type SanityExplainerDoc } from "./mapExplainer";
 import * as q from "./queries";
 import type {
   Article,
@@ -305,9 +307,111 @@ export const getSitemapEntries = () =>
       ...demoOrders.map((o) => ({ _type: "readingOrder" as const, slug: o.slug })),
       ...demoCorps.map((k) => ({ _type: "corps" as const, slug: k.slug })),
       ...demoCategories.map((c) => ({ _type: "category" as const, slug: c.slug })),
+      ...demoExplainers.map((explainer) => ({
+        _type: "explainer" as const,
+        slug: explainer.slug,
+        updatedAt: explainer.publishedAt,
+      })),
     ],
-    ["article", "character", "storyArc", "readingOrder", "corps", "category", "author"],
+    ["article", "explainer", "character", "storyArc", "readingOrder", "corps", "category", "author"],
   );
+
+const mapExplainers = (docs: SanityExplainerDoc[]) =>
+  docs.flatMap((doc) => {
+    const explainer = mapExplainer(doc);
+    return explainer ? [explainer] : [];
+  });
+
+export async function getExplainers() {
+  const docs = await fetchList<SanityExplainerDoc[]>(
+    q.EXPLAINERS_QUERY,
+    {},
+    [],
+    demoExplainers.map((explainer) => ({
+      _id: explainer.slug,
+      title: explainer.title,
+      slug: explainer.slug,
+      dek: explainer.dek,
+      publishedAt: explainer.publishedAt,
+      author: explainer.author ?? null,
+      sections: explainer.sections.map((section) => ({
+        title: section.title,
+        anchor: section.id,
+        blocks: section.blocks.map(demoBlock),
+      })),
+    })),
+    ["explainer"],
+  );
+  return mapExplainers(docs);
+}
+
+export async function getExplainer(slug: string) {
+  const demo = demoExplainers.find((explainer) => explainer.slug === slug);
+  const doc = await sanityFetch<SanityExplainerDoc | null>(
+    q.EXPLAINER_QUERY,
+    { slug },
+    pick(
+      null,
+      demo
+        ? {
+            _id: demo.slug,
+            title: demo.title,
+            slug: demo.slug,
+            dek: demo.dek,
+            publishedAt: demo.publishedAt,
+            author: demo.author ?? null,
+            sections: demo.sections.map((section) => ({
+              title: section.title,
+              anchor: section.id,
+              blocks: section.blocks.map(demoBlock),
+            })),
+          }
+        : null,
+    ),
+    ["explainer"],
+  );
+  return doc ? mapExplainer(doc) : null;
+}
+
+export const getExplainerSlugs = () =>
+  fetchList<{ slug: string }[]>(
+    q.EXPLAINER_SLUGS_QUERY,
+    {},
+    [],
+    demoExplainers.map((explainer) => ({ slug: explainer.slug })),
+    ["explainer"],
+  );
+
+const demoBlock = (block: (typeof demoExplainers)[number]["sections"][number]["blocks"][number]) => {
+  switch (block.type) {
+    case "paragraph":
+      return { _type: "explainerParagraph", text: block.text };
+    case "points":
+      return { _type: "explainerPoints", items: block.items };
+    case "steps":
+      return { _type: "explainerSteps", items: block.items };
+    case "thesis":
+      return { _type: "explainerThesis", kicker: block.kicker, text: block.text };
+    case "timeline":
+      return { _type: "explainerTimeline", caption: block.caption, rows: block.rows };
+    case "terms":
+      return { _type: "explainerTerms", items: block.items };
+    case "compare":
+      return {
+        _type: "explainerCompare",
+        caption: block.caption,
+        leftHeading: block.columns[0],
+        rightHeading: block.columns[1],
+        rows: block.rows,
+      };
+    case "reading":
+      return { _type: "explainerReading", items: block.items };
+    default: {
+      const unreachable: never = block;
+      return unreachable;
+    }
+  }
+};
 
 /* Search */
 
@@ -315,8 +419,17 @@ export async function search(term: string): Promise<SearchHit[]> {
   const clean = term.trim().replace(/[^\p{L}\p{N}\s'-]/gu, "");
   if (clean.length < 2) return [];
   const needle = clean.toLowerCase();
-  const demoHits: SearchHit[] = demoArticles
-    .filter((a) => a.title.toLowerCase().includes(needle))
-    .map((a) => ({ _id: a._id, _type: "article", title: a.title, slug: a.slug, excerpt: a.excerpt }));
+  const demoHits: SearchHit[] = [
+    ...demoArticles
+      .filter((a) => a.title.toLowerCase().includes(needle))
+      .map((a) => ({ _id: a._id, _type: "article" as const, title: a.title, slug: a.slug, excerpt: a.excerpt })),
+    ...explainersMatching(needle).map((explainer) => ({
+      _id: explainer.slug,
+      _type: "explainer" as const,
+      title: explainer.title,
+      slug: explainer.slug,
+      excerpt: explainer.dek,
+    })),
+  ];
   return sanityFetch<SearchHit[]>(q.SEARCH_QUERY, { q: `${clean}*` }, pick([], demoHits), []);
 }

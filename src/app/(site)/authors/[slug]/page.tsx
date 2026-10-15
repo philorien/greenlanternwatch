@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArticleCard } from "@/components/cards";
+import { ArticleCard, ExplainerCard } from "@/components/cards";
 import { JsonLd } from "@/components/JsonLd";
 import { RichText } from "@/components/RichText";
 import { Socials } from "@/components/Socials";
 import { Thumb } from "@/components/Thumb";
 import { EmptyState, SectionTitle } from "@/components/ui";
+import { listFeatures } from "@/lib/features";
 import { absoluteUrl, describe, organizationId, pageMetadata, shareImage } from "@/lib/seo";
-import { getAuthorPage, getAuthorSlugs } from "@/sanity/data";
+import { getAuthorPage, getAuthorSlugs, getExplainers } from "@/sanity/data";
 import type { Author } from "@/sanity/types";
 
 export const revalidate = 60;
@@ -55,8 +56,15 @@ function authorJsonLd(author: Author) {
 
 export default async function AuthorPage({ params }: PageProps<"/authors/[slug]">) {
   const { slug } = await params;
-  const { author, articles } = await getAuthorPage(slug);
+  const [{ author, articles }, explainers] = await Promise.all([
+    getAuthorPage(slug),
+    getExplainers(),
+  ]);
   if (!author) notFound();
+  const writing = listFeatures(
+    articles,
+    explainers.filter((explainer) => explainer.author?.slug === slug),
+  );
 
   return (
     <>
@@ -86,11 +94,19 @@ export default async function AuthorPage({ params }: PageProps<"/authors/[slug]"
 
       <section>
         <SectionTitle>Articles by {author.name}</SectionTitle>
-        {articles.length > 0 ? (
+        {writing.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {articles.map((a) => (
-              <ArticleCard key={a._id} article={a} />
-            ))}
+            {writing.map((item) =>
+              item.kind === "article" ? (
+                <ArticleCard key={item.article._id} article={item.article} />
+              ) : (
+                <ExplainerCard
+                  key={item.explainer.slug}
+                  explainer={item.explainer}
+                  readMinutes={item.readMinutes}
+                />
+              ),
+            )}
           </div>
         ) : (
           <EmptyState>No articles yet.</EmptyState>

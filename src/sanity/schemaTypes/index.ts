@@ -6,6 +6,7 @@ import { category } from "./category";
 import { character } from "./character";
 import { comicIssue } from "./comicIssue";
 import { corps } from "./corps";
+import { explainer } from "./explainer";
 import { keyIssue } from "./keyIssue";
 import { readingEntry } from "./readingEntry";
 import { readingOrder } from "./readingOrder";
@@ -13,6 +14,7 @@ import { storyArc } from "./storyArc";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   article,
+  explainer,
   comicIssue,
   category,
   author,

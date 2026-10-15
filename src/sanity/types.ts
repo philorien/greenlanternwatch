@@ -222,14 +222,14 @@ export type ComicsHubData = {
 };
 
 export type SitemapEntry = {
-  _type: "article" | "character" | "storyArc" | "readingOrder" | "corps" | "category" | "author";
+  _type: "article" | "explainer" | "character" | "storyArc" | "readingOrder" | "corps" | "category" | "author";
   slug: string;
   updatedAt?: string;
 };
 
 export type SearchHit = {
   _id: string;
-  _type: "article" | "character" | "storyArc" | "readingOrder" | "corps";
+  _type: "article" | "explainer" | "character" | "storyArc" | "readingOrder" | "corps";
   title: string;
   slug: string;
   excerpt?: string;

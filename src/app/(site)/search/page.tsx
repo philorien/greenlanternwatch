@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 const typeLabel: Record<SearchHit["_type"], string> = {
   article: "Article",
+  explainer: "Feature",
   character: "Character",
   storyArc: "Story arc",
   readingOrder: "Reading order",
@@ -24,6 +25,13 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
   const raw = (await searchParams).q;
   const term = (Array.isArray(raw) ? raw[0] : raw) ?? "";
   const hits = term ? await search(term) : [];
+  const results = hits.map((hit) => ({
+    key: hit._id,
+    href: hrefFor(hit),
+    type: typeLabel[hit._type],
+    title: hit.title,
+    excerpt: hit.excerpt,
+  }));
 
   return (
     <>
@@ -48,22 +56,22 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
         </button>
       </form>
 
-      {term && hits.length === 0 ? (
+      {term && results.length === 0 ? (
         <EmptyState>No results for that search.</EmptyState>
       ) : null}
 
       <ul className="max-w-3xl space-y-3">
-        {hits.map((hit) => (
-          <li key={hit._id}>
+        {results.map((result) => (
+          <li key={result.key}>
             <Link
-              href={hrefFor(hit)}
+              href={result.href}
               className="panel group block p-4 transition-colors hover:border-glow-dim"
             >
-              <p className="eyebrow">{typeLabel[hit._type]}</p>
+              <p className="eyebrow">{result.type}</p>
               <p className="font-display text-lg font-bold transition-colors group-hover:text-glow">
-                {hit.title}
+                {result.title}
               </p>
-              {hit.excerpt ? <p className="text-sm text-muted">{hit.excerpt}</p> : null}
+              {result.excerpt ? <p className="text-sm text-muted">{result.excerpt}</p> : null}
             </Link>
           </li>
         ))}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArticleCard, ComicIssueCard } from "@/components/cards";
+import { ArticleCard, ComicIssueCard, ExplainerCard } from "@/components/cards";
 import { HeroCarousel, type HeroSlide } from "@/components/HeroCarousel";
 import {
   CategoriesPanel,
@@ -11,8 +11,9 @@ import {
 import { JsonLd } from "@/components/JsonLd";
 import { EmptyState, SectionTitle } from "@/components/ui";
 import { site } from "@/config/site";
+import { listFeatures } from "@/lib/features";
 import { pageMetadata, siteJsonLd } from "@/lib/seo";
-import { getHome } from "@/sanity/data";
+import { getExplainers, getHome } from "@/sanity/data";
 import { focalPoint, urlFor } from "@/sanity/image";
 
 export const revalidate = 60;
@@ -25,7 +26,7 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default async function HomePage() {
-  const data = await getHome();
+  const [data, explainers] = await Promise.all([getHome(), getExplainers()]);
 
   const slides: HeroSlide[] = data.hero.map((a) => ({
     slug: a.slug,
@@ -41,6 +42,7 @@ export default async function HomePage() {
 
   const heroIds = new Set(data.hero.map((a) => a._id));
   const featured = data.latest.filter((a) => !heroIds.has(a._id)).slice(0, 3);
+  const recentFeatures = listFeatures(data.features, explainers, 3);
   const sidebarNews = data.latest.slice(0, 4);
   const hasContent = data.latest.length > 0;
 
@@ -87,13 +89,21 @@ export default async function HomePage() {
           )}
         </section>
 
-        {data.features.length > 0 ? (
+        {recentFeatures.length > 0 ? (
           <section>
             <SectionTitle href="/category/features">Recent features</SectionTitle>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {data.features.map((a) => (
-                <ArticleCard key={a._id} article={a} />
-              ))}
+              {recentFeatures.map((item) =>
+                item.kind === "article" ? (
+                  <ArticleCard key={item.article._id} article={item.article} />
+                ) : (
+                  <ExplainerCard
+                    key={item.explainer.slug}
+                    explainer={item.explainer}
+                    readMinutes={item.readMinutes}
+                  />
+                ),
+              )}
             </div>
           </section>
         ) : null}
