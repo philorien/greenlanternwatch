@@ -42,7 +42,6 @@ const DESCRIPTION_LIMIT = 160;
 // Below this, a whole first sentence says too little, so cut mid-sentence instead.
 const MIN_SENTENCE_DESCRIPTION = 70;
 
-/** First non-empty candidate, trimmed to a search-snippet length on a word boundary. */
 /** Shortest-safe description: whole sentences when they fit, else cut at a word. */
 export function describe(...candidates: (string | null | undefined)[]) {
   const text = candidates.find((c) => c?.trim())?.replace(/\s+/g, " ").trim();

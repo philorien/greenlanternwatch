@@ -18,11 +18,19 @@ export function SiteFooter() {
         <Socials />
       </div>
       <div className="border-t border-line">
-        <p className="mx-auto max-w-7xl px-4 py-5 text-xs text-muted sm:px-6">
-          Green Lantern Watch is an unofficial fan site. Green Lantern and
-          related characters and names are trademarks of DC. This site is not
-          affiliated with or endorsed by DC or Warner Bros. Discovery.
-        </p>
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-muted sm:px-6 md:flex-row md:items-start md:justify-between md:gap-8">
+          <p>
+            Green Lantern Watch is an unofficial fan site. Green Lantern and
+            related characters and names are trademarks of DC. This site is not
+            affiliated with or endorsed by DC or Warner Bros. Discovery.
+          </p>
+          <p className="shrink-0">
+            Built by{" "}
+            <a href="https://lorienweb.com" className="text-text underline-offset-2 hover:text-glow hover:underline">
+              Lorien Web
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );
