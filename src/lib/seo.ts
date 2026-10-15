@@ -14,7 +14,7 @@ const SHARE_SIZE = { width: 1200, height: 630 };
 type ImageFit = "crop" | "fill";
 
 export const defaultShareImage = {
-  url: "/og-default.png",
+  url: "/og-default.jpg",
   ...SHARE_SIZE,
   alt: site.name,
 };

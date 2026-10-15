@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { formatDate } from "@/components/cards";
 import { ExplainerBody } from "@/components/ExplainerBody";
 import { JsonLd } from "@/components/JsonLd";
+import { Thumb } from "@/components/Thumb";
 import { BackLink } from "@/components/ui";
 import { explainerReadMinutes } from "@/content/explainers";
 import {
@@ -12,6 +13,7 @@ import {
   describe,
   organizationId,
   pageMetadata,
+  shareImage,
 } from "@/lib/seo";
 import { getExplainer, getExplainerSlugs } from "@/sanity/data";
 
@@ -33,6 +35,7 @@ export async function generateMetadata({
     title: explainer.title,
     description: describe(explainer.dek),
     path: `/explainers/${slug}`,
+    image: explainer.mainImage,
     publishedTime: explainer.publishedAt,
     section: "Features",
   });
@@ -56,6 +59,7 @@ export default async function ExplainerPage({ params }: PageProps<"/explainers/[
             mainEntityOfPage: url,
             headline: explainer.title,
             description: describe(explainer.dek),
+            image: explainer.mainImage?.asset ? [shareImage(explainer.mainImage).url] : undefined,
             datePublished: explainer.publishedAt,
             articleSection: "Features",
             author: explainer.author
@@ -107,6 +111,26 @@ export default async function ExplainerPage({ params }: PageProps<"/explainers/[
           {explainerReadMinutes(explainer)} min read
         </p>
       </header>
+
+      {explainer.mainImage?.asset ? (
+        <figure className="mb-10">
+          <Thumb
+            image={explainer.mainImage}
+            aspect="aspect-video"
+            className="rounded-lg border border-line"
+            sizes="(min-width: 768px) 768px, 100vw"
+            width={1400}
+            priority
+          />
+          {explainer.mainImage.caption || explainer.mainImage.credit ? (
+            <figcaption className="mt-2 text-sm text-muted">
+              {[explainer.mainImage.caption, explainer.mainImage.credit]
+                .filter(Boolean)
+                .join("  •  ")}
+            </figcaption>
+          ) : null}
+        </figure>
+      ) : null}
 
       <nav aria-label="On this page" className="mb-14 flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:gap-x-5 sm:gap-y-2">
         {explainer.sections.map((section) => (

@@ -83,7 +83,12 @@ export function ExplainerCard({
       href={`/explainers/${explainer.slug}`}
       className="panel group flex flex-col overflow-hidden transition-colors hover:border-glow-dim"
     >
-      <Thumb aspect="aspect-[16/9]" className="rounded-none" sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" />
+      <Thumb
+        image={explainer.mainImage}
+        aspect="aspect-[16/9]"
+        className="rounded-none"
+        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+      />
       <div className="flex flex-1 flex-col gap-2 p-4">
         <CategoryLabel>Features</CategoryLabel>
         <h3 className="font-display text-lg font-bold leading-snug transition-colors group-hover:text-glow">

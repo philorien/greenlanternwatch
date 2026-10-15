@@ -1,3 +1,5 @@
+import type { SanityImage } from "@/sanity/types";
+
 export type ExplainerPoint = {
   lead: string;
   text: string;
@@ -46,6 +48,7 @@ export type Explainer = {
   title: string;
   dek: string;
   publishedAt: string;
+  mainImage?: SanityImage;
   author?: { name: string; slug?: string };
   sections: ExplainerSection[];
 };

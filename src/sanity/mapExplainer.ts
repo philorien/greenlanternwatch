@@ -1,4 +1,5 @@
 import type { Explainer, ExplainerBlock } from "@/content/explainers";
+import type { SanityImage } from "./types";
 
 export type SanityExplainerDoc = {
   _id: string;
@@ -6,6 +7,7 @@ export type SanityExplainerDoc = {
   slug?: string | null;
   dek?: string | null;
   publishedAt?: string | null;
+  mainImage?: SanityImage | null;
   author?: { name?: string | null; slug?: string | null } | null;
   sections?:
     | {
@@ -115,6 +117,7 @@ export function mapExplainer(doc: SanityExplainerDoc): Explainer | null {
     title: doc.title,
     dek: text(doc.dek),
     publishedAt: doc.publishedAt,
+    mainImage: doc.mainImage?.asset ? doc.mainImage : undefined,
     author: doc.author?.name
       ? { name: doc.author.name, slug: doc.author.slug ?? undefined }
       : undefined,

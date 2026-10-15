@@ -259,6 +259,7 @@ const explainerDoc = /* groq */ `
   "slug": slug.current,
   dek,
   publishedAt,
+  mainImage { asset, hotspot, alt, caption, credit },
   "author": author->{ name, "slug": slug.current },
   sections[]{
     _key,

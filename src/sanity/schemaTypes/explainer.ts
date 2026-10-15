@@ -39,6 +39,27 @@ export const explainer = defineType({
       validation: (rule) => rule.required().max(400),
     }),
     defineField({
+      name: "mainImage",
+      title: "Hero image",
+      type: "image",
+      description: "Shown above the explainer, on its feature card and when the page is shared.",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          type: "string",
+          title: "Alt text",
+          validation: (rule) => rule.required(),
+        }),
+        defineField({ name: "caption", type: "string" }),
+        defineField({
+          name: "credit",
+          type: "string",
+          description: "Who owns the image, for example the studio or artist.",
+        }),
+      ],
+    }),
+    defineField({
       name: "author",
       type: "reference",
       to: [{ type: "author" }],
