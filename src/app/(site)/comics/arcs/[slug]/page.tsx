@@ -22,6 +22,14 @@ export async function generateStaticParams() {
   return slugs.map(({ slug }) => ({ slug }));
 }
 
+/** Searchers for this event want the issue order, including what they can skip. */
+const BLACKEST_NIGHT_DESCRIPTION =
+  "The main series, Green Lantern, and Green Lantern Corps tell the core story. Tie-ins are optional.";
+
+function arcDescription(arc: StoryArc) {
+  return arc.slug === "blackest-night" ? BLACKEST_NIGHT_DESCRIPTION : describe(arc.tagline, arc.lead);
+}
+
 export async function generateMetadata({
   params,
 }: PageProps<"/comics/arcs/[slug]">): Promise<Metadata> {
@@ -30,7 +38,7 @@ export async function generateMetadata({
   if (!arc) return {};
   return pageMetadata({
     title: arc.title,
-    description: describe(arc.tagline, arc.lead),
+    description: arcDescription(arc),
     path: `/comics/arcs/${slug}`,
     image: arc.cover,
     imageFit: "fill",
@@ -42,8 +50,8 @@ function storyArcJsonLd(arc: StoryArc) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `${arc.title} reading list`,
-    description: describe(arc.tagline, arc.lead),
+    name: arc.title.toLowerCase().includes("reading order") ? arc.title : `${arc.title} reading list`,
+    description: arcDescription(arc),
     url: absoluteUrl(`/comics/arcs/${arc.slug}`),
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     numberOfItems: entries.length,

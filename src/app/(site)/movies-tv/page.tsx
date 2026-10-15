@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
 import { ArticleCard } from "@/components/cards";
 import { PageHeader, SectionTitle } from "@/components/ui";
 import { screenGuide } from "@/content/movies-tv";
+import { pageMetadata } from "@/lib/seo";
 import { getCategoryPage } from "@/sanity/data";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Movies & TV",
   description:
     "A guide to Green Lantern films and shows: the ones built around a Lantern, and the ones where a Lantern appears in a larger story.",
-};
+  path: "/movies-tv",
+});
 
 export default async function MoviesTvPage() {
   const { articles } = await getCategoryPage("movies-tv");
