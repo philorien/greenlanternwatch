@@ -72,12 +72,12 @@ export function ReadingList({
               {startAt + i}
             </span>
             {coverSrc ? (
-              <div className="relative aspect-[2/3] w-16 shrink-0 overflow-hidden rounded border border-line bg-surface-2">
+              <div className="relative aspect-[2/3] w-16 shrink-0 self-start overflow-hidden rounded border border-line bg-surface-2 sm:w-20">
                 <Image
                   src={coverSrc}
                   alt={entry.cover?.alt ?? ""}
                   fill
-                  sizes="64px"
+                  sizes="(min-width: 640px) 80px, 64px"
                   className="object-cover"
                 />
               </div>

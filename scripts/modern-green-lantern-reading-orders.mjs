@@ -31,8 +31,8 @@ const orders = [
       `"Where do I start?" is the most common Green Lantern question there is, so here is a full modern reading order, from Green Lantern: Rebirth (2004) through everything released as of October 2026. It's built on [the 2021 community reading order from r/Greenlantern](${COMMUNITY_ORDER_URL}), extended to the present with some fixes and additions.`,
       "## The short answer",
       "- **Want the big modern saga?** Start with **Green Lantern: Rebirth #1-6** and read Geoff Johns' run straight through to **Green Lantern (2011) #20**. Almost everything since builds on it.",
-      "- **Want to read what's coming out now?** **Green Lantern (2023) #1** by Jeremy Adams is a clean starting point. **Issue #16** works too, since that's where the DC All In era begins.",
-      "- **Want something standalone?** Grant Morrison and Liam Sharp's **The Green Lantern** and N.K. Jemisin and Jamal Campbell's **Far Sector** both read fine on their own.",
+      "- **Want to read what's coming out now?** **Green Lantern (2023) #1** by Jeremy Adams is a clean starting point, with **Green Lantern Corps (2025) #1** running alongside it. Green Lantern **#16** works too, since that's where the DC All In era begins.",
+      "- **Want something standalone?** Geoff Johns and Ivan Reis' **Secret Origin**, Grant Morrison and Liam Sharp's **The Green Lantern** and N.K. Jemisin and Jamal Campbell's **Far Sector** all read fine on their own.",
       "People also ask about reading **Secret Origin** (Green Lantern #29-35) first, since it's Hal's origin. You can, but it was written after Rebirth, and the full order keeps it where it came out.",
       "## The eras at a glance",
       "- **Geoff Johns era (2004-2011):** Green Lantern, Green Lantern Corps, Sinestro Corps War, Blackest Night. 277 issues.",
@@ -61,12 +61,13 @@ const orders = [
         note: "The current era is the easiest one to jump into.",
         lines: `
           GL (2023) #1 | Jeremy Adams brings Hal back to Coast City. A clean starting point.
-          GL (2023) #16 | Where the DC All In era begins.
+          GLC (2025) #1 | The Corps' own book, alongside Green Lantern. The two cross over in The Starbreaker Supremacy.
         `,
       },
       {
         title: "Standalone picks",
         lines: `
+          GL (2005) #29-35 @secret-origin | Geoff Johns and Ivan Reis retell Hal's origin, with Sinestro as his mentor.
           The Green Lantern (2018) #1-12 | Grant Morrison and Liam Sharp's Hal as an intergalactic cop. Continue with Green Lantern: Blackstars and The Green Lantern Season Two.
           Far Sector (2019) #1-12 | N.K. Jemisin and Jamal Campbell's standalone Jo Mullein story.
         `,
