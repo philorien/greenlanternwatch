@@ -17,9 +17,12 @@ export function imageSize(image?: { asset?: { _ref?: string } }) {
   return match ? { width: Number(match[1]), height: Number(match[2]) } : null;
 }
 
-/** CSS width that keeps an image at most 80% of the screen tall, so a full comic page fits in view. */
+/**
+ * CSS width that keeps an image at most 80% of the screen tall, so a full comic page fits in view,
+ * and never wider than its own pixels, so small scans are not blown up.
+ */
 export function screenFitWidth({ width, height }: { width: number; height: number }) {
-  return `min(100%, ${Math.round((8000 * width) / height) / 100}vh)`;
+  return `min(100%, ${Math.round((8000 * width) / height) / 100}vh, ${width}px)`;
 }
 
 /** CSS object-position that keeps an image's hotspot in view when it is cropped to fit. */
