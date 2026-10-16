@@ -1,6 +1,6 @@
 # Green Lantern Watch
 
-greenlanternwatch.com. Your Sector for All Things Green Lantern.
+[greenlanternwatch.com](https://greenlanternwatch.com). Your Sector for All Things Green Lantern. An unofficial fan site, not affiliated with or endorsed by DC.
 
 Next.js (App Router) + Tailwind CSS v4 + Sanity + Vercel. Sanity Studio is embedded at `/studio`.
 
@@ -65,6 +65,15 @@ Content updates show up within 60 seconds (ISR). For instant updates, add a Sani
 - `keyIssue`: kind (first appearance, origin, villain debut, historic ring, milestone), why it matters, characters
 - `character`: section (Earth, alien, other), Corps, bio, abilities, construct style, portrayals, key storylines, reading recommendations
 - `corps`: spectrum color, emotion, tagline, key figures, description
+
+## Content pipeline
+
+Most reference content is written as code in `scripts/` and imported into Sanity, so it can be reviewed in diffs and rebuilt from scratch. ComicVine fills in the facts.
+
+- **Seed scripts** (`characters.mjs`, `corps.mjs`, `story-arcs.mjs`, `explainers.mjs` and the reading order scripts) write NDJSON for `sanity dataset import`. Document IDs are fixed, so re-running an import replaces documents in place. Reading orders use a shorthand (`GL (2005) #29-35 @secret-origin | note`) that `reading-order-build.mjs` expands.
+- **ComicVine** (`scripts/comicvine/`): the CBL reading lists in `scripts/data/` record a ComicVine ID for every issue. `fetch.mjs` caches covers, release dates and creator credits, pacing itself under ComicVine's rate limit and picking up where it left off. `sync.mjs` writes those fields into Sanity without touching editorial notes and uploads each cover once. `key-issues.mjs` and `latest.mjs` do the same for key issues and for the newest issues of every current Lantern series.
+
+Each script's header comment has its exact commands. The ComicVine scripts read `comicvine_api_key` from `.env.local`.
 
 ## Notes
 
