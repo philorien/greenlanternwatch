@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ExplainerBlock, ExplainerSection } from "@/content/explainers";
-import { urlFor } from "@/sanity/image";
+import { imageSize, screenFitWidth, urlFor } from "@/sanity/image";
 import type { SanityImage } from "@/sanity/types";
 
 const LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
@@ -138,19 +138,20 @@ function Compare({
   );
 }
 
-/** Shown at its own shape. Sanity asset IDs carry the size, for example image-…-842x230-webp. */
+/** Shown at its own shape, no taller than the screen. */
 function Figure({ image }: { image: SanityImage }) {
-  const size = image.asset?._ref.match(/-(\d+)x(\d+)-\w+$/);
+  const size = imageSize(image);
   if (!size) return null;
   return (
     <figure>
       <Image
         src={urlFor(image).auto("format").url()}
         alt={image.alt ?? ""}
-        width={Number(size[1])}
-        height={Number(size[2])}
+        width={size.width}
+        height={size.height}
         sizes="(min-width: 768px) 768px, 100vw"
-        className="h-auto w-full rounded-lg border border-line"
+        className="mx-auto h-auto rounded-lg border border-line"
+        style={{ width: screenFitWidth(size) }}
       />
       {image.caption || image.credit ? (
         <figcaption className="mt-2 text-sm text-muted">

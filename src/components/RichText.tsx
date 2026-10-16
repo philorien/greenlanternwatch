@@ -5,7 +5,7 @@ import {
   type PortableTextBlock,
   type PortableTextComponents,
 } from "next-sanity";
-import { urlFor } from "@/sanity/image";
+import { imageSize, screenFitWidth, urlFor } from "@/sanity/image";
 import { pathFor, type LinkableType } from "@/sanity/paths";
 
 const components: PortableTextComponents = {
@@ -13,14 +13,17 @@ const components: PortableTextComponents = {
     image: ({ value }) => {
       if (!value?.asset) return null;
       const src = urlFor(value).width(1600).auto("format").url();
+      const size = imageSize(value) ?? { width: 1600, height: 900 };
       return (
         <figure>
           <Image
             src={src}
             alt={value.alt ?? ""}
-            width={1600}
-            height={900}
-            className="h-auto w-full rounded-lg border border-line"
+            width={size.width}
+            height={size.height}
+            sizes="(min-width: 768px) 768px, 100vw"
+            className="mx-auto h-auto rounded-lg border border-line"
+            style={{ width: screenFitWidth(size) }}
           />
           {value.caption ? <figcaption>{value.caption}</figcaption> : null}
         </figure>
