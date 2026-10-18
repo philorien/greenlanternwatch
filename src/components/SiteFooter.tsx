@@ -13,7 +13,7 @@ export function SiteFooter() {
         </Link>
         <nav aria-label="Footer" className="flex gap-6 text-sm text-muted">
           <Link href="/about" className="hover:text-glow">About</Link>
-          <Link href="/search" className="hover:text-glow">Search</Link>
+          <Link href="/search" prefetch={false} className="hover:text-glow">Search</Link>
         </nav>
         <Socials />
       </div>

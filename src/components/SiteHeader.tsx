@@ -47,6 +47,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
           <Link
             href="/search"
+            prefetch={false}
             aria-label="Search"
             className="rounded-md p-2 text-muted transition-colors hover:text-glow"
           >

@@ -8,7 +8,8 @@ export default function robots(): MetadataRoute.Robots {
   }
 
   return {
-    rules: { userAgent: "*", allow: "/", disallow: "/studio" },
+    // /search renders on every request, so keep crawlers from burning CPU on it.
+    rules: { userAgent: "*", allow: "/", disallow: ["/studio", "/search"] },
     sitemap: absoluteUrl("/sitemap.xml"),
   };
 }
