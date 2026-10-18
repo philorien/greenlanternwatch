@@ -9,7 +9,7 @@ import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo
 import { getReadingOrder, getReadingOrderSlugs } from "@/sanity/data";
 import type { ReadingOrder } from "@/sanity/types";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 const orderWordmarks: Record<string, WordmarkVariant> = {
   "morrison-and-thorne-2018-2022": "the-green-lantern-2018",

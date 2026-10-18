@@ -11,7 +11,7 @@ import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo
 import { getStoryArc, getStoryArcSlugs } from "@/sanity/data";
 import type { StoryArc } from "@/sanity/types";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 const arcWordmarks: Record<string, WordmarkVariant> = {
   "absolute-green-lantern": "absolute-green-lantern",

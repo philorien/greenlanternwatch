@@ -3,7 +3,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { getSitemapEntries } from "@/sanity/data";
 import { pathFor } from "@/sanity/paths";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const staticPaths = ["/", "/news", "/comics", "/characters", "/corps", "/movies-tv", "/about"];
 

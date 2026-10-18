@@ -10,7 +10,7 @@ import { breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo";
 import { getCharacter, getCharacterSlugs } from "@/sanity/data";
 import type { Character } from "@/sanity/types";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 const mediumLabel: Record<string, string> = {
   comics: "Comics",

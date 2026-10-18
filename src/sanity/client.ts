@@ -9,8 +9,19 @@ export const client = createClient({
 });
 
 /**
+ * Every fetch carries this tag. The Sanity webhook at /api/revalidate busts
+ * it on publish, so queries that pull in referenced types (an article's
+ * author or category) never go stale.
+ */
+export const SITE_CACHE_TAG = "sanity";
+
+/**
  * Fetch published content. Returns `fallback` when Sanity is not configured
  * yet, so local builds and previews work without a project.
+ *
+ * Content refreshes when the publish webhook fires. The daily revalidate is
+ * only a safety net if the webhook fails; short timers re-render pages on
+ * nearly every visit and burn Vercel CPU.
  */
 export async function sanityFetch<T>(
   query: string,
@@ -20,6 +31,6 @@ export async function sanityFetch<T>(
 ): Promise<T> {
   if (!isSanityConfigured) return fallback;
   return client.fetch<T>(query, params, {
-    next: { revalidate: 60, tags },
+    next: { revalidate: 86400, tags: [SITE_CACHE_TAG, ...tags] },
   });
 }

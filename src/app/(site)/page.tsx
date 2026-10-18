@@ -16,7 +16,7 @@ import { pageMetadata, siteJsonLd } from "@/lib/seo";
 import { getExplainers, getHome } from "@/sanity/data";
 import { focalPoint, urlFor } from "@/sanity/image";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 export const metadata: Metadata = pageMetadata({
   title: { absolute: `${site.name}: ${site.tagline}` },

@@ -4,7 +4,7 @@ import { screenGuide } from "@/content/movies-tv";
 import { pageMetadata } from "@/lib/seo";
 import { getCategoryPage } from "@/sanity/data";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 export const metadata = pageMetadata({
   title: "Movies & TV",

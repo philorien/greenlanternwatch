@@ -3,7 +3,7 @@ import { absoluteUrl, describe } from "@/lib/seo";
 import { getCharacters, getComicsHub, getExplainers, getNews } from "@/sanity/data";
 import { pathFor } from "@/sanity/paths";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 const RECENT_ARTICLES = 25;
 

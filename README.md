@@ -41,7 +41,14 @@ While `NEXT_PUBLIC_SANITY_PROJECT_ID` is empty, `npm run dev` fills every page w
 3. Add `greenlanternwatch.com` under Project Settings, Domains, and point DNS at Vercel as it instructs. Add the www variant and redirect one to the other.
 4. Add `https://greenlanternwatch.com` (and the www variant) as CORS origins in Sanity with credentials allowed, so `/studio` works in production.
 
-Content updates show up within 60 seconds (ISR). For instant updates, add a Sanity webhook that calls a revalidation route (not built yet).
+Content updates go live through a Sanity webhook. Pages are cached for a day otherwise, because short ISR timers re-render pages on nearly every visit and burn through Vercel's CPU allowance.
+
+This is already set up (October 2026). To recreate it:
+
+1. Generate a secret (`openssl rand -base64 32`) and add it in Vercel as `SANITY_REVALIDATE_SECRET` (Production).
+2. In sanity.io/manage, under API, Webhooks, create a webhook: URL `https://www.greenlanternwatch.com/api/revalidate` (the `www` host, since Sanity won't follow a redirect on POST), dataset `production`, trigger on create, update and delete, filter `!(_type in ["sanity.imageAsset", "sanity.fileAsset"])`, projection `{_type}`, HTTP method POST, drafts off, and the same secret.
+
+Any publish clears the whole site's cache, and each page re-renders the next time someone visits it. If the webhook fails, content still refreshes within a day.
 
 ## Routes
 

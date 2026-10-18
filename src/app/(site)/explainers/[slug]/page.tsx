@@ -17,7 +17,7 @@ import {
 } from "@/lib/seo";
 import { getExplainer, getExplainerSlugs } from "@/sanity/data";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const slugs = await getExplainerSlugs();

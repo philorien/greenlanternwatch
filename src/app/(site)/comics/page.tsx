@@ -12,7 +12,7 @@ import { EmptyState, PageHeader, SectionTitle } from "@/components/ui";
 import { pageMetadata } from "@/lib/seo";
 import { getComicsHub } from "@/sanity/data";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 export const metadata: Metadata = pageMetadata({
   title: "Comics guide",

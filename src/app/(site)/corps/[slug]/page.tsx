@@ -10,7 +10,7 @@ import { BackLink, EmptyState, SectionTitle } from "@/components/ui";
 import { breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo";
 import { getCorps, getCorpsSlugs } from "@/sanity/data";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const slugs = await getCorpsSlugs();

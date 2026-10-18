@@ -11,7 +11,7 @@ import { absoluteUrl, describe, organizationId, pageMetadata, shareImage } from 
 import { getAuthorPage, getAuthorSlugs, getExplainers } from "@/sanity/data";
 import type { Author } from "@/sanity/types";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const slugs = await getAuthorSlugs();

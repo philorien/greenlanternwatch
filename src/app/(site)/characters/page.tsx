@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 import { getCharacters } from "@/sanity/data";
 import type { CharacterSummary } from "@/sanity/types";
 
-export const revalidate = 60;
+export const revalidate = 86400;
 
 export const metadata: Metadata = pageMetadata({
   title: "Characters and Corps",
