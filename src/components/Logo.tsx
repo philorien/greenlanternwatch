@@ -19,6 +19,7 @@ const siteLogos = {
   long: { src: "/glw-logo-long.webp", width: 1002, height: 65 },
   short: { src: "/glw-logo-short.webp", width: 927, height: 408 },
   full: { src: "/glw-logo-full.webp", width: 952, height: 431 },
+  lockup: { src: "/glw-logo-lockup.png", width: 1024, height: 253 },
 } as const;
 
 /** The Green Lantern Watch logo: one line, compact "GL Watch", or the full stacked version. */

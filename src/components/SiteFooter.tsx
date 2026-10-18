@@ -8,7 +8,7 @@ export function SiteFooter() {
     <footer className="mt-20 border-t border-line">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
         <Link href="/" className="flex flex-col items-start gap-3">
-          <SiteLogo variant="full" sizes="177px" className="h-20" />
+          <SiteLogo variant="lockup" sizes="324px" className="h-16 sm:h-20" />
           <span className="text-xs text-muted">{site.tagline}.</span>
         </Link>
         <nav aria-label="Footer" className="flex gap-6 text-sm text-muted">

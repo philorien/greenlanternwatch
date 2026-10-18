@@ -17,12 +17,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-line bg-ink/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3 sm:px-6">
         <Link href="/" className="flex shrink-0 flex-col items-start gap-1.5">
-          <SiteLogo variant="short" sizes="91px" eager className="h-10 sm:hidden" />
           <SiteLogo
-            variant="long"
-            sizes="(min-width: 1280px) 432px, (min-width: 1024px) 308px, 370px"
+            variant="lockup"
+            sizes="(min-width: 1280px) 291px, (min-width: 1024px) 194px, 227px"
             eager
-            className="hidden h-6 sm:block lg:h-5 xl:h-7"
+            className="h-14 sm:h-16 lg:h-12 xl:h-[4.5rem]"
           />
           <span className="hidden text-[0.62rem] font-medium uppercase tracking-[0.14em] text-muted sm:block">
             {site.tagline}
