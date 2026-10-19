@@ -5,7 +5,10 @@ export const client = createClient({
   projectId: projectId || "unconfigured",
   dataset,
   apiVersion,
-  useCdn: true,
+  // The API CDN can lag a few seconds behind the publish webhook, and the page
+  // that re-renders in that gap caches old content as fresh. Next already
+  // caches every fetch, so read from the live API.
+  useCdn: false,
 });
 
 /**
