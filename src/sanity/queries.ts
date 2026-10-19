@@ -77,6 +77,7 @@ const readingEntry = /* groq */ `
   format,
   note,
   "arc": arc->{ title, "slug": slug.current },
+  buyLink,
   cover { asset, alt, credit },
   releaseStart,
   releaseEnd,
@@ -128,6 +129,7 @@ export const ARTICLE_QUERY = defineQuery(/* groq */ `
     ${articleSummary},
     _updatedAt,
     mainImage { asset, hotspot, alt, caption, credit },
+    comicRelease { title, publisher, releaseDate, coverageType, cover { asset, alt }, buyLink },
     ${richText("body")},
     "lead": pt::text(body[_type == "block" && style == "normal"][0...2]),
     tags,
@@ -185,6 +187,7 @@ export const READING_ORDER_SLUGS_QUERY = defineQuery(/* groq */ `
 export const STORY_ARC_QUERY = defineQuery(/* groq */ `
   *[_type == "storyArc" && slug.current == $slug][0]{
     ${arcSummary},
+    buyLink,
     ${richText("summary")},
     "lead": pt::text(summary[_type == "block" && style == "normal"][0...2]),
     readingList[]{ ${readingEntry} },

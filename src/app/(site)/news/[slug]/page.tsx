@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BuyButton } from "@/components/BuyButton";
 import { ArticleCard, formatDate } from "@/components/cards";
 import { JsonLd } from "@/components/JsonLd";
 import { RichText } from "@/components/RichText";
@@ -150,6 +151,15 @@ export default async function ArticlePage({ params }: PageProps<"/news/[slug]">)
         ) : null}
 
         <RichText value={article.body} />
+
+        {article.comicRelease?.buyLink ? (
+          <aside className="panel mt-10 flex flex-wrap items-center justify-between gap-4 p-5">
+            {article.comicRelease.title ? (
+              <p className="font-display text-lg font-bold">{article.comicRelease.title}</p>
+            ) : null}
+            <BuyButton href={article.comicRelease.buyLink} />
+          </aside>
+        ) : null}
 
         {article.tags && article.tags.length > 0 ? (
           <div className="mt-10 flex flex-wrap gap-2">

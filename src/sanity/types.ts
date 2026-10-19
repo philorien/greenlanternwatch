@@ -28,6 +28,7 @@ export type ComicRelease = {
   releaseDate?: string;
   coverageType?: "review" | "preview" | "recap";
   cover?: SanityImage;
+  buyLink?: string;
 };
 
 export type ArticleSummary = {
@@ -122,6 +123,7 @@ export type ReadingEntry = {
   format?: "issues" | "collected" | "event";
   note?: string;
   arc?: { title: string; slug: string };
+  buyLink?: string;
   cover?: SanityImage;
   releaseStart?: string;
   releaseEnd?: string;
@@ -153,6 +155,7 @@ export type ReadingOrder = ReadingOrderSummary & {
 };
 
 export type StoryArc = StoryArcSummary & {
+  buyLink?: string;
   summary?: PortableTextBlock[];
   lead?: string;
   readingList?: ReadingEntry[];

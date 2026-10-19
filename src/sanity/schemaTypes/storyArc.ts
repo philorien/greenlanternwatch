@@ -66,6 +66,13 @@ export const storyArc = defineType({
         defineField({ name: "credit", type: "string" }),
       ],
     }),
+    defineField({
+      name: "buyLink",
+      title: "Buy link",
+      type: "url",
+      description: "Where to buy the collected edition, such as an Amazon affiliate link. Shows as a button under the arc's details.",
+      validation: (rule) => rule.uri({ scheme: ["https"] }),
+    }),
     defineField({ name: "summary", type: "blockContent" }),
     defineField({
       name: "readingList",

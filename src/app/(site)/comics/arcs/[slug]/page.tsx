@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BuyButton } from "@/components/BuyButton";
 import { CharacterCard, CorpsCard, yearSpan } from "@/components/cards";
 import { Wordmark, type WordmarkVariant } from "@/components/Logo";
 import { ComicVineCredit, ReadingList } from "@/components/ReadingList";
@@ -116,6 +117,7 @@ export default async function StoryArcPage({
               ))}
             </dl>
           ) : null}
+          {arc.buyLink ? <BuyButton href={arc.buyLink} className="mt-6" /> : null}
         </div>
       </div>
 

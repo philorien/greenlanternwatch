@@ -119,6 +119,13 @@ export const article = defineType({
           options: { hotspot: true },
           fields: [defineField({ name: "alt", type: "string", title: "Alt text" })],
         }),
+        defineField({
+          name: "buyLink",
+          title: "Buy link",
+          type: "url",
+          description: "Where to buy this comic, such as an Amazon affiliate link. When filled, a Buy on Amazon button shows at the end of the article.",
+          validation: (rule) => rule.uri({ scheme: ["https"] }),
+        }),
       ],
     }),
   ],

@@ -50,6 +50,13 @@ export const readingEntry = defineType({
       description: "Link to the arc hub, if one exists.",
     }),
     defineField({
+      name: "buyLink",
+      title: "Buy link",
+      type: "url",
+      description: "Where to buy these issues collected, such as an Amazon affiliate link.",
+      validation: (rule) => rule.uri({ scheme: ["https"] }),
+    }),
+    defineField({
       name: "cover",
       type: "image",
       fieldset: "details",

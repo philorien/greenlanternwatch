@@ -5,6 +5,7 @@ import {
   type PortableTextBlock,
   type PortableTextComponents,
 } from "next-sanity";
+import { externalRel } from "@/lib/affiliate";
 import { imageSize, screenFitWidth, urlFor } from "@/sanity/image";
 import { pathFor, type LinkableType } from "@/sanity/paths";
 
@@ -33,11 +34,10 @@ const components: PortableTextComponents = {
   marks: {
     link: ({ value, children }) => {
       const href = value?.href as string | undefined;
-      const external = href?.startsWith("http");
       return (
         <a
           href={href}
-          {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          {...(href?.startsWith("http") ? { target: "_blank", rel: externalRel(href) } : {})}
         >
           {children}
         </a>

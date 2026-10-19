@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { externalRel, isAmazonLink } from "@/lib/affiliate";
 import { urlFor } from "@/sanity/image";
 import type { ReadingEntry } from "@/sanity/types";
 
@@ -95,7 +96,7 @@ export function ReadingList({
               </p>
               {creditLine ? <p className="mt-1 text-sm text-text/75">{creditLine}</p> : null}
               {entry.note ? <p className="mt-2 text-sm text-text/85">{entry.note}</p> : null}
-              {entry.arc || entry.comicVineUrl ? (
+              {entry.arc || entry.buyLink || entry.comicVineUrl ? (
                 <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
                   {entry.arc ? (
                     <Link
@@ -104,6 +105,16 @@ export function ReadingList({
                     >
                       Arc guide: {entry.arc.title} &rarr;
                     </Link>
+                  ) : null}
+                  {entry.buyLink ? (
+                    <a
+                      href={entry.buyLink}
+                      target="_blank"
+                      rel={externalRel(entry.buyLink)}
+                      className="text-glow hover:underline"
+                    >
+                      {isAmazonLink(entry.buyLink) ? "Buy on Amazon" : "Buy the collected edition"} &#8599;
+                    </a>
                   ) : null}
                   {entry.comicVineUrl ? (
                     <a
