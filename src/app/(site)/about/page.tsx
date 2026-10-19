@@ -27,6 +27,11 @@ const sections = [
     description: "Our comics guide: reading orders, story arc hubs and the key issues worth tracking down.",
   },
   {
+    href: "/buying-guide",
+    title: "Buying guide",
+    description: "The collected editions worth paying for, with links to buy them.",
+  },
+  {
     href: "/movies-tv",
     title: "Movies & TV",
     description: "Films and shows built around a Green Lantern, and the ones where a Lantern appears.",
@@ -224,7 +229,8 @@ export default function AboutPage() {
           related characters and names are trademarks of DC. The site is not
           affiliated with or endorsed by DC or Warner Bros. Discovery. Cover art
           and other images belong to their respective owners and appear here
-          for news, commentary and review.
+          for news, commentary and review. As an Amazon Associate, Green
+          Lantern Watch earns from qualifying purchases.
         </p>
       </div>
     </article>

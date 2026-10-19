@@ -12,6 +12,7 @@ export function SiteFooter() {
           <span className="text-xs text-muted">{site.tagline}.</span>
         </Link>
         <nav aria-label="Footer" className="flex gap-6 text-sm text-muted">
+          <Link href="/buying-guide" className="hover:text-glow">Buying guide</Link>
           <Link href="/about" className="hover:text-glow">About</Link>
           <Link href="/search" prefetch={false} className="hover:text-glow">Search</Link>
         </nav>
@@ -22,7 +23,9 @@ export function SiteFooter() {
           <p>
             Green Lantern Watch is an unofficial fan site. Green Lantern and
             related characters and names are trademarks of DC. This site is not
-            affiliated with or endorsed by DC or Warner Bros. Discovery.
+            affiliated with or endorsed by DC or Warner Bros. Discovery. As an
+            Amazon Associate, Green Lantern Watch earns from qualifying
+            purchases.
           </p>
           <p className="shrink-0">
             Built by{" "}

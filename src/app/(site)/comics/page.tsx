@@ -45,6 +45,13 @@ export default async function ComicsPage() {
         />
       </div>
 
+      <p className="-mt-4 mb-10 max-w-3xl text-muted">
+        <Link href="/buying-guide" className="text-glow underline-offset-2 hover:underline">
+          Buying guide
+        </Link>{" "}
+        for the collected editions worth paying for.
+      </p>
+
       {empty ? (
         <EmptyState>
           The guide is empty. Add reading orders, story arcs and key issues in the Studio.

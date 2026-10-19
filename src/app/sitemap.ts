@@ -5,7 +5,7 @@ import { pathFor } from "@/sanity/paths";
 
 export const revalidate = 86400;
 
-const staticPaths = ["/", "/news", "/comics", "/characters", "/corps", "/movies-tv", "/about"];
+const staticPaths = ["/", "/news", "/comics", "/buying-guide", "/characters", "/corps", "/movies-tv", "/about"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries = await getSitemapEntries();

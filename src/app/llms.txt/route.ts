@@ -23,6 +23,12 @@ const guides: Link[] = [
     path: "/comics",
     description: "The Book of Oa, our comics guide: reading orders, story arc hubs and key issues.",
   },
+  {
+    title: "Buying guide",
+    path: "/buying-guide",
+    description:
+      "The collected Green Lantern editions worth buying, with Amazon links. Affiliate links: we earn from qualifying purchases.",
+  },
   { title: "News", path: "/news", description: "Announcements, release dates and casting across comics, TV and film." },
   {
     title: "Movies & TV",
