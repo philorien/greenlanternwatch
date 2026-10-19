@@ -63,15 +63,15 @@ export default function AboutPage() {
     <article className="mx-auto max-w-3xl">
       <Image
         src="/about-hero.png"
-        alt="About"
+        alt="The Green Lantern Watch"
         width={1024}
-        height={319}
+        height={437}
         priority
         sizes="(min-width: 768px) 768px, 100vw"
         className="mb-8 h-auto w-full"
       />
       <PageHeader
-        title={site.name}
+        title="About"
         intro="An unofficial, fan-run guide to Green Lantern across comics, TV and film. We follow the news, review what's new and help you find the right thing to read next."
       />
 
