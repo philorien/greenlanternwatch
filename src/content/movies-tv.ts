@@ -3,6 +3,9 @@ export type ScreenTitle = {
   year: string;
   format: "Animated film" | "Live-action film" | "Animated series" | "Live-action series";
   note: string;
+  /** Amazon Associates link. SiteStripe short links already carry the tag. */
+  buy?: string;
+  buyLabel?: string;
 };
 
 export type ScreenSection = {
@@ -21,30 +24,42 @@ export const screenGuide: ScreenSection[] = [
         year: "2008",
         format: "Animated film",
         note: "Hal Jordan becomes a Green Lantern as the Justice League comes together.",
+        buy: "https://link.amazon/B01UlLWr4",
       },
       {
         title: "Green Lantern: First Flight",
         year: "2009",
         format: "Animated film",
         note: "Hal Jordan's first mission with the Corps, and his clash with Sinestro.",
+        buy: "https://link.amazon/B097cq2t4",
       },
       {
         title: "Green Lantern: Emerald Knights",
         year: "2011",
         format: "Animated film",
         note: "Stories from the Corps, told by Hal Jordan.",
+        buy: "https://link.amazon/B0gyADljz",
       },
       {
         title: "Green Lantern",
         year: "2011",
         format: "Live-action film",
         note: "Ryan Reynolds as Hal Jordan.",
+        buy: "https://link.amazon/B0hvPG3Zy",
+      },
+      {
+        title: "Justice League vs. the Fatal Five",
+        year: "2019",
+        format: "Animated film",
+        note: "The Fatal Five hunt Jessica Cruz, a new Green Lantern, and the Justice League has to stop them.",
+        buy: "https://link.amazon/B0hp2LQSS",
       },
       {
         title: "Green Lantern: Beware My Power",
         year: "2022",
         format: "Animated film",
         note: "John Stewart is recruited as Earth's Green Lantern.",
+        buy: "https://link.amazon/B0dFaiRyp",
       },
     ],
   },
@@ -63,6 +78,7 @@ export const screenGuide: ScreenSection[] = [
         year: "2011–2013",
         format: "Animated series",
         note: "Hal Jordan and Kilowog patrol the edge of Guardian space.",
+        buy: "https://link.amazon/B0dqQwFuY",
       },
       {
         title: "Lanterns",
@@ -99,6 +115,8 @@ export const screenGuide: ScreenSection[] = [
         year: "2004–2006",
         format: "Animated series",
         note: "John Stewart stays on as the League grows.",
+        buy: "https://link.amazon/B0b9ExxCf",
+        buyLabel: "Buy the complete series",
       },
       {
         title: "Stargirl",
@@ -117,6 +135,7 @@ export const screenGuide: ScreenSection[] = [
         year: "2025",
         format: "Live-action film",
         note: "Guy Gardner, played by Nathan Fillion.",
+        buy: "https://link.amazon/B0adfPPHT",
       },
     ],
   },

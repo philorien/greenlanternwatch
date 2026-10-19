@@ -1,6 +1,7 @@
 import { ArticleCard } from "@/components/cards";
 import { PageHeader, SectionTitle } from "@/components/ui";
 import { screenGuide } from "@/content/movies-tv";
+import { externalRel } from "@/lib/affiliate";
 import { pageMetadata } from "@/lib/seo";
 import { getCategoryPage } from "@/sanity/data";
 
@@ -63,6 +64,19 @@ export default async function MoviesTvPage() {
                   <p className="mt-1.5 max-w-2xl text-sm text-muted">
                     <span className="text-text/80">{item.format}.</span> {item.note}
                   </p>
+                  {item.buy ? (
+                    <p className="mt-2">
+                      <a
+                        href={item.buy}
+                        target="_blank"
+                        rel={externalRel(item.buy)}
+                        className="inline-flex items-center py-2 font-display text-xs font-bold uppercase tracking-wider text-glow hover:underline"
+                      >
+                        {item.buyLabel ?? "Buy on Amazon"}
+                        <span className="sr-only">: {item.title} (opens in a new tab)</span>
+                      </a>
+                    </p>
+                  ) : null}
                 </div>
               </li>
             ))}
