@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { CorpsSymbol, Wordmark } from "@/components/Logo";
+import { CorpsSymbol } from "@/components/Logo";
 import { Socials } from "@/components/Socials";
 import { PageHeader } from "@/components/ui";
 import { site } from "@/config/site";
@@ -60,9 +61,16 @@ export default function AboutPage() {
 
   return (
     <article className="mx-auto max-w-3xl">
-      <Wordmark className="mb-10 w-full max-w-lg" />
+      <Image
+        src="/about-hero.png"
+        alt="About"
+        width={1024}
+        height={319}
+        priority
+        sizes="(min-width: 768px) 768px, 100vw"
+        className="mb-8 h-auto w-full"
+      />
       <PageHeader
-        eyebrow="About"
         title={site.name}
         intro="An unofficial, fan-run guide to Green Lantern across comics, TV and film. We follow the news, review what's new and help you find the right thing to read next."
       />
