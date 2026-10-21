@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { UpdatedOn } from "@/components/cards";
 import { Wordmark, type WordmarkVariant } from "@/components/Logo";
 import { ComicVineCredit, ReadingList } from "@/components/ReadingList";
 import { RichText } from "@/components/RichText";
 import { JsonLd } from "@/components/JsonLd";
 import { BackLink, PageHeader } from "@/components/ui";
-import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata, webPageJsonLd } from "@/lib/seo";
 import { getReadingOrder, getReadingOrderSlugs } from "@/sanity/data";
 import type { ReadingOrder } from "@/sanity/types";
 
@@ -35,8 +36,7 @@ export async function generateMetadata({
 
 function readingOrderJsonLd(order: ReadingOrder) {
   const entries = order.sections?.flatMap((s) => s.entries ?? []) ?? [];
-  return {
-    "@context": "https://schema.org",
+  const list = {
     "@type": "ItemList",
     name: order.title,
     description: describe(order.tagline, order.lead),
@@ -50,6 +50,12 @@ function readingOrderJsonLd(order: ReadingOrder) {
       ...(entry.arc ? { url: absoluteUrl(`/comics/arcs/${entry.arc.slug}`) } : {}),
     })),
   };
+  return webPageJsonLd({
+    path: `/comics/reading-orders/${order.slug}`,
+    name: order.title,
+    dateModified: order._updatedAt,
+    mainEntity: list,
+  });
 }
 
 export default async function ReadingOrderPage({
@@ -76,7 +82,9 @@ export default async function ReadingOrderPage({
       <BackLink href="/comics">Comics guide</BackLink>
       {wordmark ? <Wordmark variant={wordmark} className="mt-8 w-full max-w-xs" /> : null}
       <div className="mt-6">
-        <PageHeader eyebrow="Reading order" title={order.title} intro={order.tagline} />
+        <PageHeader eyebrow="Reading order" title={order.title} intro={order.tagline}>
+          <UpdatedOn iso={order._updatedAt} className="mt-4" />
+        </PageHeader>
       </div>
       <RichText value={order.intro} />
       <div className="mt-10 space-y-12">

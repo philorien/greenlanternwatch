@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BuyButton } from "@/components/BuyButton";
-import { CharacterCard, CorpsCard, yearSpan } from "@/components/cards";
+import { CharacterCard, CorpsCard, UpdatedOn, yearSpan } from "@/components/cards";
 import { Wordmark, type WordmarkVariant } from "@/components/Logo";
 import { ComicVineCredit, ReadingList } from "@/components/ReadingList";
 import { RichText } from "@/components/RichText";
 import { Thumb } from "@/components/Thumb";
 import { JsonLd } from "@/components/JsonLd";
 import { BackLink, SectionTitle } from "@/components/ui";
-import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata, webPageJsonLd } from "@/lib/seo";
 import { getStoryArc, getStoryArcSlugs } from "@/sanity/data";
 import type { StoryArc } from "@/sanity/types";
 
@@ -23,12 +23,8 @@ export async function generateStaticParams() {
   return slugs.map(({ slug }) => ({ slug }));
 }
 
-/** Searchers for this event want the issue order, including what they can skip. */
-const BLACKEST_NIGHT_DESCRIPTION =
-  "The main series, Green Lantern, and Green Lantern Corps tell the core story. Tie-ins are optional.";
-
 function arcDescription(arc: StoryArc) {
-  return arc.slug === "blackest-night" ? BLACKEST_NIGHT_DESCRIPTION : describe(arc.tagline, arc.lead);
+  return describe(arc.seoDescription, arc.tagline, arc.lead);
 }
 
 export async function generateMetadata({
@@ -46,10 +42,9 @@ export async function generateMetadata({
   });
 }
 
-function storyArcJsonLd(arc: StoryArc) {
+function readingListJsonLd(arc: StoryArc) {
   const entries = arc.readingList ?? [];
   return {
-    "@context": "https://schema.org",
     "@type": "ItemList",
     name: arc.title.toLowerCase().includes("reading order") ? arc.title : `${arc.title} reading list`,
     description: arcDescription(arc),
@@ -62,6 +57,15 @@ function storyArcJsonLd(arc: StoryArc) {
       name: entry.issues ? `${entry.title}, ${entry.issues}` : entry.title,
     })),
   };
+}
+
+function storyArcJsonLd(arc: StoryArc) {
+  return webPageJsonLd({
+    path: `/comics/arcs/${arc.slug}`,
+    name: arc.title,
+    dateModified: arc._updatedAt,
+    mainEntity: arc.readingList?.length ? readingListJsonLd(arc) : undefined,
+  });
 }
 
 export default async function StoryArcPage({
@@ -83,7 +87,7 @@ export default async function StoryArcPage({
     <div className="mx-auto max-w-4xl">
       <JsonLd
         data={[
-          ...(arc.readingList?.length ? [storyArcJsonLd(arc)] : []),
+          storyArcJsonLd(arc),
           breadcrumbJsonLd([
             { name: "Comics guide", path: "/comics" },
             { name: arc.title, path: `/comics/arcs/${arc.slug}` },
@@ -117,6 +121,7 @@ export default async function StoryArcPage({
               ))}
             </dl>
           ) : null}
+          <UpdatedOn iso={arc._updatedAt} className="mt-4" />
           {arc.buyLink ? <BuyButton href={arc.buyLink} className="mt-6" /> : null}
         </div>
       </div>

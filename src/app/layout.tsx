@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   },
   description:
     "Green Lantern Watch covers the TV show, movies and comics, with news, a comics reading guide and character profiles.",
+  // Discover only shows the large image card when a site allows full-size previews.
+  robots: { "max-image-preview": "large" },
   openGraph: {
     siteName: site.name,
     locale: "en_US",
