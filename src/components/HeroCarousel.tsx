@@ -71,13 +71,19 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
                 className="absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,rgb(34_179_78/0.35),transparent_55%),linear-gradient(135deg,#0b1f17,#030c09)]"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-transparent" />
+            {/* The scrim is at least 70% ink under all the text, which keeps
+                the light text at 4.5:1 even over a white patch of image.
+                Phone text spans the slide, so the scrim does too; wider
+                screens fade it out past the 36rem text column. */}
+            <div className="absolute inset-0 bg-ink/70 sm:bg-transparent sm:bg-[linear-gradient(to_right,rgb(3_12_9/0.9),rgb(3_12_9/0.7)_36rem,transparent)]" />
             <div
               className={`relative flex max-w-xl flex-col gap-4 p-6 sm:p-10 ${
                 count > 1 ? "pb-16 sm:pb-16" : ""
               }`}
             >
-              <p className="eyebrow flex items-center gap-2">
+              {/* Light, not green: green small text needs a darker scrim
+                  than the image can take. The dot keeps the accent. */}
+              <p className="eyebrow flex items-center gap-2 !text-text">
                 <span aria-hidden className="size-2 rounded-full bg-glow shadow-[0_0_8px_var(--color-glow)]" />
                 Featured{slide.category ? ` / ${slide.category}` : ""}
               </p>
@@ -91,7 +97,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               ) : null}
               <Link
                 href={`/news/${slide.slug}`}
-                className="w-fit rounded-full border border-glow px-5 py-2 font-display text-xs font-bold uppercase tracking-wider text-glow transition-colors hover:bg-glow hover:text-ink"
+                className="w-fit rounded-full border border-glow bg-ink/90 px-5 py-2 font-display text-xs font-bold uppercase tracking-wider text-glow transition-colors hover:bg-glow hover:text-ink"
               >
                 Read more &rarr;
               </Link>

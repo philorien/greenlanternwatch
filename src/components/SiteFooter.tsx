@@ -29,7 +29,7 @@ export function SiteFooter() {
           </p>
           <p className="shrink-0">
             Built by{" "}
-            <a href="https://lorienweb.com" className="text-text underline-offset-2 hover:text-glow hover:underline">
+            <a href="https://lorienweb.com" className="text-text underline underline-offset-2 hover:text-glow">
               Lorien Web
             </a>
           </p>

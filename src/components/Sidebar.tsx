@@ -99,11 +99,11 @@ export function NewsletterPanel() {
           type="email"
           required
           placeholder="Your email address"
-          className="min-w-0 flex-1 rounded-l-md border border-line bg-ink px-3 py-2 text-sm placeholder:text-muted focus:border-glow focus:outline-none"
+          className="min-w-0 flex-1 rounded-l-md border border-muted/70 bg-ink px-3 py-2 text-sm placeholder:text-muted focus:border-glow focus:outline-none"
         />
         <button
           type="submit"
-          className="rounded-r-md bg-glow px-4 py-2 font-display text-xs font-extrabold uppercase tracking-wider text-ink hover:bg-glow-dim"
+          className="rounded-r-md bg-glow px-4 py-2 font-display text-xs font-extrabold uppercase tracking-wider text-ink hover:brightness-110"
         >
           Subscribe
         </button>

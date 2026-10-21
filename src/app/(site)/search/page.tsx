@@ -46,11 +46,11 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
           type="search"
           defaultValue={term}
           placeholder="Articles, characters, arcs"
-          className="min-w-0 flex-1 rounded-l-md border border-line bg-surface px-4 py-2.5 placeholder:text-muted focus:border-glow focus:outline-none"
+          className="min-w-0 flex-1 rounded-l-md border border-muted/70 bg-surface px-4 py-2.5 placeholder:text-muted focus:border-glow focus:outline-none"
         />
         <button
           type="submit"
-          className="rounded-r-md bg-glow px-5 py-2.5 font-display text-xs font-extrabold uppercase tracking-wider text-ink hover:bg-glow-dim"
+          className="rounded-r-md bg-glow px-5 py-2.5 font-display text-xs font-extrabold uppercase tracking-wider text-ink hover:brightness-110"
         >
           Search
         </button>
