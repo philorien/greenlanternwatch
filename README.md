@@ -1,3 +1,7 @@
+<p align="center">
+  <a href="https://www.greenlanternwatch.com"><img src="public/glw-logo-lockup.png" alt="Green Lantern Watch" width="480"></a>
+</p>
+
 # Green Lantern Watch
 
 [greenlanternwatch.com](https://greenlanternwatch.com). Your Sector for All Things Green Lantern. An unofficial fan site, not affiliated with or endorsed by DC.
