@@ -114,7 +114,7 @@ export default async function ArticlePage({ params }: PageProps<"/news/[slug]">)
                 By{" "}
                 <Link
                   href={`/authors/${article.author.slug}`}
-                  className="text-text transition-colors hover:text-glow"
+                  className="text-text underline underline-offset-2 transition-colors hover:text-glow"
                 >
                   {article.author.name}
                 </Link>

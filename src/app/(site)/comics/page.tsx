@@ -46,7 +46,7 @@ export default async function ComicsPage() {
       </div>
 
       <p className="-mt-4 mb-10 max-w-3xl text-muted">
-        <Link href="/buying-guide" className="text-glow underline-offset-2 hover:underline">
+        <Link href="/buying-guide" className="text-glow underline underline-offset-2">
           Buying guide
         </Link>{" "}
         for the collected editions worth paying for.

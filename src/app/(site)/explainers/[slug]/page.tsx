@@ -100,7 +100,7 @@ export default async function ExplainerPage({ params }: PageProps<"/explainers/[
               {explainer.author.slug ? (
                 <Link
                   href={`/authors/${explainer.author.slug}`}
-                  className="text-text transition-colors hover:text-glow"
+                  className="text-text underline underline-offset-2 transition-colors hover:text-glow"
                 >
                   {explainer.author.name}
                 </Link>
