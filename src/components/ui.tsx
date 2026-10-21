@@ -5,10 +5,13 @@ export function PageHeader({
   eyebrow,
   title,
   intro,
+  children,
 }: {
   eyebrow?: string;
   title: string;
   intro?: string;
+  /** Extra lines under the intro, such as an updated date. */
+  children?: ReactNode;
 }) {
   return (
     <div className="mb-10 max-w-3xl">
@@ -17,6 +20,7 @@ export function PageHeader({
         {title}
       </h1>
       {intro ? <p className="mt-4 text-lg text-muted">{intro}</p> : null}
+      {children}
     </div>
   );
 }

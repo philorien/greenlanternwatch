@@ -23,6 +23,16 @@ export function formatDate(iso: string) {
   });
 }
 
+/** "Updated Oct 20, 2026" line for guides that change as new issues come out. */
+export function UpdatedOn({ iso, className = "" }: { iso?: string; className?: string }) {
+  if (!iso) return null;
+  return (
+    <p className={`text-sm text-muted ${className}`}>
+      Updated <time dateTime={iso}>{formatDate(iso)}</time>
+    </p>
+  );
+}
+
 export function yearSpan(start?: number, end?: number) {
   if (!start) return null;
   return end && end !== start ? `${start} to ${end}` : `${start}`;

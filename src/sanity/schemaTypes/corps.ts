@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { UsersIcon } from "@sanity/icons/Users";
+import { seoDescriptionField } from "./seoDescription";
 
 export const spectrumColors = [
   "green",
@@ -59,6 +60,7 @@ export const corps = defineType({
       type: "string",
       description: "One line describing what the Corps is about.",
     }),
+    seoDescriptionField("emotion and tagline"),
     defineField({
       name: "keyFigures",
       type: "array",

@@ -174,7 +174,7 @@ export const COMICS_HUB_QUERY = defineQuery(/* groq */ `{
 
 export const READING_ORDER_QUERY = defineQuery(/* groq */ `
   *[_type == "readingOrder" && slug.current == $slug][0]{
-    _id, title, "slug": slug.current, audience, tagline, ${richText("intro")},
+    _id, _updatedAt, title, "slug": slug.current, audience, tagline, ${richText("intro")},
     "lead": pt::text(intro[_type == "block" && style == "normal"][0...2]),
     sections[]{ _key, title, note, entries[]{ ${readingEntry} } }
   }
@@ -187,6 +187,8 @@ export const READING_ORDER_SLUGS_QUERY = defineQuery(/* groq */ `
 export const STORY_ARC_QUERY = defineQuery(/* groq */ `
   *[_type == "storyArc" && slug.current == $slug][0]{
     ${arcSummary},
+    _updatedAt,
+    seoDescription,
     buyLink,
     ${richText("summary")},
     "lead": pt::text(summary[_type == "block" && style == "normal"][0...2]),
@@ -240,6 +242,7 @@ export const CORPS_LIST_QUERY = defineQuery(/* groq */ `
 export const CORPS_QUERY = defineQuery(/* groq */ `
   *[_type == "corps" && slug.current == $slug][0]{
     ${corpsSummary},
+    seoDescription,
     keyFigures,
     "keyFigureCharacters": *[_type == "character" && defined(slug.current)
       && (name in ^.keyFigures || alias in ^.keyFigures)]{ name, alias, "slug": slug.current },
@@ -261,6 +264,7 @@ const explainerDoc = /* groq */ `
   title,
   "slug": slug.current,
   dek,
+  seoDescription,
   publishedAt,
   "updatedAt": _updatedAt,
   mainImage { asset, hotspot, alt, caption, credit },

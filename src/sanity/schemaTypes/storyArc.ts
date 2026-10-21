@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { StackIcon } from "@sanity/icons/Stack";
+import { seoDescriptionField } from "./seoDescription";
 
 export const storyArc = defineType({
   name: "storyArc",
@@ -24,6 +25,7 @@ export const storyArc = defineType({
       type: "string",
       description: "One line on why this arc matters.",
     }),
+    seoDescriptionField("tagline"),
     defineField({
       name: "kind",
       type: "string",

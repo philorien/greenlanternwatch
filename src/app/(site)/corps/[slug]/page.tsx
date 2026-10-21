@@ -26,6 +26,7 @@ export async function generateMetadata({
   return pageMetadata({
     title: corps.name,
     description: describe(
+      corps.seoDescription,
       corps.tagline ? `${corps.emotion}. ${corps.tagline}` : undefined,
       corps.lead,
     ),

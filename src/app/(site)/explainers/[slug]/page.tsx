@@ -33,7 +33,7 @@ export async function generateMetadata({
   return pageMetadata({
     type: "article",
     title: explainer.title,
-    description: describe(explainer.dek),
+    description: describe(explainer.seoDescription, explainer.dek),
     path: `/explainers/${slug}`,
     image: explainer.mainImage,
     publishedTime: explainer.publishedAt,
@@ -59,7 +59,7 @@ export default async function ExplainerPage({ params }: PageProps<"/explainers/[
             "@id": `${url}#article`,
             mainEntityOfPage: url,
             headline: explainer.title,
-            description: describe(explainer.dek),
+            description: describe(explainer.seoDescription, explainer.dek),
             image: explainer.mainImage?.asset ? [shareImage(explainer.mainImage).url] : undefined,
             datePublished: explainer.publishedAt,
             dateModified: explainer.updatedAt ?? explainer.publishedAt,

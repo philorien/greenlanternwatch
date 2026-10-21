@@ -149,12 +149,15 @@ export type ReadingOrderSummary = {
 };
 
 export type ReadingOrder = ReadingOrderSummary & {
+  _updatedAt?: string;
   intro?: PortableTextBlock[];
   lead?: string;
   sections?: ReadingSection[];
 };
 
 export type StoryArc = StoryArcSummary & {
+  _updatedAt?: string;
+  seoDescription?: string;
   buyLink?: string;
   summary?: PortableTextBlock[];
   lead?: string;
@@ -200,6 +203,7 @@ export type Character = CharacterSummary & {
 };
 
 export type Corps = CorpsSummary & {
+  seoDescription?: string;
   keyFigures?: string[];
   keyFigureCharacters?: { name: string; alias?: string; slug: string }[];
   description?: PortableTextBlock[];

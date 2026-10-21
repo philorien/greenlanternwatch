@@ -48,6 +48,8 @@ export type Explainer = {
   slug: string;
   title: string;
   dek: string;
+  /** Meta description override; the dek is used when this is blank. */
+  seoDescription?: string;
   publishedAt: string;
   updatedAt?: string;
   mainImage?: SanityImage;

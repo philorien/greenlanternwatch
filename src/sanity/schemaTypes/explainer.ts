@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { BookIcon } from "@sanity/icons/Book";
+import { seoDescriptionField } from "./seoDescription";
 
 const LINK_HINT = "Plain text. To link, write [words](/characters/hal-jordan).";
 
@@ -41,6 +42,7 @@ export const explainer = defineType({
       description: "The opening summary. Shown on the feature card and under the headline.",
       validation: (rule) => rule.required().max(400),
     }),
+    seoDescriptionField("standfirst"),
     defineField({
       name: "mainImage",
       title: "Hero image",

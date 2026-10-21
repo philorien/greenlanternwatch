@@ -142,6 +142,30 @@ export function siteJsonLd() {
   };
 }
 
+/**
+ * ItemList can't carry dateModified (it isn't a CreativeWork), so list pages
+ * wrap their list in a WebPage that says when the guide was last changed.
+ */
+export function webPageJsonLd(input: {
+  path: string;
+  name: string;
+  dateModified?: string;
+  mainEntity?: object;
+}) {
+  const url = absoluteUrl(input.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: input.name,
+    dateModified: input.dateModified,
+    publisher: { "@id": organizationId },
+    inLanguage: "en",
+    mainEntity: input.mainEntity,
+  };
+}
+
 export function breadcrumbJsonLd(trail: { name: string; path: string }[]) {
   return {
     "@context": "https://schema.org",
