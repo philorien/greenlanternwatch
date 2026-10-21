@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { externalRel, isAmazonLink } from "@/lib/affiliate";
 import { urlFor } from "@/sanity/image";
 import type { ReadingEntry } from "@/sanity/types";
+import { SanityCdnImage } from "./SanityCdnImage";
 
 const formatLabel = {
   issues: "Single issues",
@@ -74,7 +74,7 @@ export function ReadingList({
             </span>
             {coverSrc ? (
               <div className="relative aspect-[2/3] w-16 shrink-0 self-start overflow-hidden rounded border border-line bg-surface-2 sm:w-20">
-                <Image
+                <SanityCdnImage
                   src={coverSrc}
                   alt={entry.cover?.alt ?? ""}
                   fill

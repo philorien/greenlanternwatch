@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { focalPoint, urlFor } from "@/sanity/image";
 import type { SanityImage } from "@/sanity/types";
 import { LogoMark } from "./Logo";
+import { SanityCdnImage } from "./SanityCdnImage";
 
 type Props = {
   image?: SanityImage;
@@ -27,7 +27,7 @@ export function Thumb({
       className={`relative overflow-hidden bg-surface-2 ${aspect} ${className}`}
     >
       {src ? (
-        <Image
+        <SanityCdnImage
           src={src}
           alt={image?.alt ?? ""}
           fill

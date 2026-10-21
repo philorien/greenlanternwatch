@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { ExplainerBlock, ExplainerSection } from "@/content/explainers";
 import { imageSize, screenFitWidth, urlFor } from "@/sanity/image";
 import type { SanityImage } from "@/sanity/types";
+import { SanityCdnImage } from "./SanityCdnImage";
 
 const LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
 const linkClass = "text-glow underline underline-offset-[3px]";
@@ -144,7 +144,7 @@ function Figure({ image }: { image: SanityImage }) {
   if (!size) return null;
   return (
     <figure>
-      <Image
+      <SanityCdnImage
         src={urlFor(image).auto("format").url()}
         alt={image.alt ?? ""}
         width={size.width}

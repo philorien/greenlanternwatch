@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { sanityLoader } from "@/sanity/imageLoader";
 
 export type HeroSlide = {
   slug: string;
@@ -57,6 +58,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
                 drags in a blank slide. */}
             {Math.abs(i - index) > 1 ? null : slide.imageSrc ? (
               <Image
+                loader={sanityLoader}
                 src={slide.imageSrc}
                 alt={slide.imageAlt ?? ""}
                 fill

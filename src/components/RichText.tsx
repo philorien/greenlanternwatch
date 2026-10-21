@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   PortableText,
@@ -8,6 +7,7 @@ import {
 import { externalRel } from "@/lib/affiliate";
 import { imageSize, screenFitWidth, urlFor } from "@/sanity/image";
 import { pathFor, type LinkableType } from "@/sanity/paths";
+import { SanityCdnImage } from "./SanityCdnImage";
 
 const components: PortableTextComponents = {
   types: {
@@ -17,7 +17,7 @@ const components: PortableTextComponents = {
       const size = imageSize(value) ?? { width: 1600, height: 900 };
       return (
         <figure>
-          <Image
+          <SanityCdnImage
             src={src}
             alt={value.alt ?? ""}
             width={size.width}
