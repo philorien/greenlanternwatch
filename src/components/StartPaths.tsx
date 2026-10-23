@@ -13,19 +13,27 @@ const ease = "duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:trans
 // Covers behind the first one stand a little shorter and further right, like
 // books on a shelf, and fan out a step more when the path is hovered.
 const stack = [
-  { left: "0rem", height: "100%", hover: "group-hover:-translate-y-2 group-focus-visible:-translate-y-2" },
-  { left: "4.25rem", height: "90%", hover: "group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5" },
-  { left: "7.75rem", height: "80%", hover: "group-hover:translate-x-3 group-focus-visible:translate-x-3" },
+  { height: "100%", hover: "group-hover:-translate-y-2 group-focus-visible:-translate-y-2" },
+  { height: "90%", hover: "group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5" },
+  { height: "80%", hover: "group-hover:translate-x-3 group-focus-visible:translate-x-3" },
 ];
 
 function CoverStack({ entries }: { entries: NonNullable<StartPath["entries"]> }) {
   const covers = entries.slice(0, stack.length);
+  // The step between covers shrinks with the column (cqw), so three covers never spill into the next path.
   return (
-    <div aria-hidden="true" className="relative h-44 border-b border-line sm:h-48">
+    <div
+      aria-hidden="true"
+      className="relative h-32 w-[7.25rem] shrink-0 [--step:1.55rem] md:h-48 md:w-auto md:border-b md:border-line md:[--step:min(4rem,21cqw)]"
+    >
       {covers.map((entry, index) => (
         <div
           key={`${entry.title}-${index}`}
-          style={{ left: stack[index].left, height: stack[index].height, zIndex: stack.length - index }}
+          style={{
+            left: `calc(var(--step) * ${index})`,
+            height: stack[index].height,
+            zIndex: stack.length - index,
+          }}
           className={cx(
             "absolute bottom-0 aspect-[2/3] transition-[transform,filter] motion-reduce:transform-none",
             ease,
@@ -73,7 +81,7 @@ export function StartPaths({ order }: { order: StartHere | null }) {
       {sections.length > 0 ? (
         <ol
           style={{ "--paths": sections.length } as CSSProperties}
-          className="-mx-4 mt-7 flex snap-x snap-mandatory scroll-px-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-[repeat(var(--paths),minmax(0,1fr))] sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden"
+          className="mt-6 divide-y divide-line border-y border-line md:mt-7 md:grid md:grid-cols-[repeat(var(--paths),minmax(0,1fr))] md:divide-y-0 md:border-y-0"
         >
           {sections.map((section) => {
             const entries = section.entries ?? [];
@@ -81,14 +89,14 @@ export function StartPaths({ order }: { order: StartHere | null }) {
               .map((entry) => entry.arcTitle ?? entry.title)
               .filter((name): name is string => Boolean(name));
             return (
-              <li key={section._key} className="w-[78%] shrink-0 snap-start sm:w-auto">
+              <li key={section._key} className="@container">
                 <Link
                   href={`${href}#${readingSectionId(section.title, section._key)}`}
-                  className="group flex h-full flex-col"
+                  className="group flex h-full items-center gap-4 py-4 md:flex-col md:items-stretch md:gap-0 md:py-0"
                 >
                   <CoverStack entries={entries} />
-                  <div className="pr-6 pt-4">
-                    <h3 className="font-display text-lg font-bold leading-snug tracking-[-0.01em] transition-colors group-hover:text-glow group-focus-visible:text-glow">
+                  <div className="min-w-0 md:pr-6 md:pt-4">
+                    <h3 className="font-display text-base font-bold md:text-lg leading-snug tracking-[-0.01em] transition-colors group-hover:text-glow group-focus-visible:text-glow">
                       {section.title}
                     </h3>
                     {section.note ? (
