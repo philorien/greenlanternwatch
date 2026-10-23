@@ -29,7 +29,8 @@ export const article = defineType({
       type: "text",
       rows: 3,
       group: "content",
-      description: "Short summary shown on cards and in search results.",
+      description:
+        "The opening line, shown above the story and on cards. The article should continue from it, not repeat it.",
       validation: (rule) => rule.max(240).warning("Keep it under 240 characters."),
     }),
     defineField({

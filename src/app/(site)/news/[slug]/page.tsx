@@ -7,6 +7,9 @@ import { JsonLd } from "@/components/JsonLd";
 import { RichText } from "@/components/RichText";
 import { Thumb } from "@/components/Thumb";
 import { BackLink, SectionTitle, Tag } from "@/components/ui";
+import { bodyAfterDek } from "@/lib/dek";
+import { categoryLabel } from "@/lib/labels";
+import { navHrefForLabel } from "@/lib/nav";
 import {
   absoluteUrl,
   breadcrumbJsonLd,
@@ -40,7 +43,7 @@ export async function generateMetadata({
     publishedTime: article.publishedAt,
     modifiedTime: article._updatedAt,
     authors: article.author ? [absoluteUrl(`/authors/${article.author.slug}`)] : undefined,
-    section: article.category?.title,
+    section: categoryLabel(article.category),
     tags: article.tags,
   });
 }
@@ -57,7 +60,7 @@ function articleJsonLd(article: Article) {
     image: article.mainImage?.asset ? [shareImage(article.mainImage).url] : undefined,
     datePublished: article.publishedAt,
     dateModified: article._updatedAt ?? article.publishedAt,
-    articleSection: article.category?.title,
+    articleSection: categoryLabel(article.category),
     keywords: article.tags,
     author: article.author
       ? {
@@ -76,16 +79,19 @@ export default async function ArticlePage({ params }: PageProps<"/news/[slug]">)
   const { slug } = await params;
   const article = await getArticle(slug);
   if (!article) notFound();
+  const section = categoryLabel(article.category);
+  const sectionHref =
+    section === "News" ? "/news" : article.category ? `/category/${article.category.slug}` : undefined;
 
   return (
-    <article>
+    <article data-nav-section={navHrefForLabel(section)}>
       <JsonLd
         data={[
           articleJsonLd(article),
           breadcrumbJsonLd([
             { name: "News", path: "/news" },
-            ...(article.category
-              ? [{ name: article.category.title, path: `/category/${article.category.slug}` }]
+            ...(section && section !== "News" && sectionHref
+              ? [{ name: section, path: sectionHref }]
               : []),
             { name: article.title, path: `/news/${article.slug}` },
           ]),
@@ -94,12 +100,9 @@ export default async function ArticlePage({ params }: PageProps<"/news/[slug]">)
       <div className="mx-auto max-w-3xl">
         <BackLink href="/news">All news</BackLink>
         <header className="mt-6 mb-8">
-          {article.category ? (
-            <Link
-              href={`/category/${article.category.slug}`}
-              className="eyebrow hover:underline"
-            >
-              {article.category.title}
+          {section && sectionHref ? (
+            <Link href={sectionHref} className="eyebrow hover:underline">
+              {section}
             </Link>
           ) : null}
           <h1 className="mt-3 font-display text-4xl font-black leading-tight sm:text-5xl">
@@ -150,7 +153,7 @@ export default async function ArticlePage({ params }: PageProps<"/news/[slug]">)
           </figure>
         ) : null}
 
-        <RichText value={article.body} />
+        <RichText value={bodyAfterDek(article.body, article.excerpt)} />
 
         {article.comicRelease?.buyLink ? (
           <aside className="panel mt-10 flex flex-wrap items-center justify-between gap-4 p-5">

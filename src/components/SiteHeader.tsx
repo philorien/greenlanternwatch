@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/config/site";
 import { SiteLogo } from "./Logo";
 import { MobileMenu } from "./MobileMenu";
+import { PrimaryNav } from "./PrimaryNav";
 
 function SearchIcon() {
   return (
@@ -31,20 +32,7 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav
-          aria-label="Primary"
-          className="ml-auto hidden items-center gap-4 font-display text-[0.8rem] font-semibold uppercase tracking-wider lg:flex xl:gap-6"
-        >
-          {site.nav.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="whitespace-nowrap text-muted transition-colors hover:text-glow"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <PrimaryNav />
 
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
           <Link

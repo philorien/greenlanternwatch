@@ -4,13 +4,13 @@ export const site = {
   // Must match the domain Vercel serves; the apex redirects here.
   url: "https://www.greenlanternwatch.com",
   nav: [
-    { href: "/news", label: "News" },
-    { href: "/comics", label: "Comics" },
-    { href: "/movies-tv", label: "Movies & TV" },
-    { href: "/characters", label: "Characters" },
-    { href: "/category/features", label: "Features" },
-    { href: "/category/reviews", label: "Reviews" },
-    { href: "/about", label: "About" },
+    { href: "/news", label: "News", group: "latest" },
+    { href: "/category/reviews", label: "Reviews", group: "latest" },
+    { href: "/comics", label: "Comics", group: "read" },
+    { href: "/movies-tv", label: "Movies & TV", group: "read" },
+    { href: "/characters", label: "Characters", group: "read" },
+    { href: "/category/features", label: "Features", group: "read" },
+    { href: "/about", label: "About", group: "about" },
   ],
   // Shown on the About page for corrections and tips. Hidden while empty.
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",

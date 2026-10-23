@@ -6,6 +6,7 @@ import { ComicVineCredit, ReadingList } from "@/components/ReadingList";
 import { RichText } from "@/components/RichText";
 import { JsonLd } from "@/components/JsonLd";
 import { BackLink, PageHeader } from "@/components/ui";
+import { readingSectionId } from "@/lib/reading-section";
 import { absoluteUrl, breadcrumbJsonLd, describe, pageMetadata, webPageJsonLd } from "@/lib/seo";
 import { getReadingOrder, getReadingOrderSlugs } from "@/sanity/data";
 import type { ReadingOrder } from "@/sanity/types";
@@ -93,7 +94,11 @@ export default async function ReadingOrderPage({
           const start = counter;
           counter += entries.length;
           return (
-            <section key={section._key}>
+            <section
+              key={section._key}
+              id={readingSectionId(section.title, section._key)}
+              className="scroll-mt-28"
+            >
               <h2 className="font-display text-2xl font-black">{section.title}</h2>
               {section.note ? <p className="mt-1 mb-4 text-muted">{section.note}</p> : <div className="mb-4" />}
               <ReadingList entries={entries} startAt={start} />

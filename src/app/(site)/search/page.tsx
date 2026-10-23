@@ -45,7 +45,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
           name="q"
           type="search"
           defaultValue={term}
-          placeholder="Articles, characters, arcs"
+          placeholder="News, characters, arcs"
           className="min-w-0 flex-1 rounded-l-md border border-muted/70 bg-surface px-4 py-2.5 placeholder:text-muted focus:border-glow focus:outline-none"
         />
         <button

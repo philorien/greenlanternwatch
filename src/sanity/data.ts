@@ -70,13 +70,35 @@ export async function getHome(): Promise<HomeData> {
     latest: demoArticles.slice(0, 12),
     comics: demoIssues,
     features: demoArticles.filter((a) => a.category?.slug === "features").slice(0, 3),
-    categories: demoCategories,
-    startHere: { title: demoOrders[0].title, slug: demoOrders[0].slug, tagline: demoOrders[0].tagline },
+    startHere: {
+      title: demoOrders[0].title,
+      slug: demoOrders[0].slug,
+      tagline: demoOrders[0].tagline,
+      sections: [
+        {
+          _key: "saga",
+          title: "The big modern saga",
+          note: "Placeholder for the run everything else builds on.",
+          entries: [{ title: "Demo Saga" }],
+        },
+        {
+          _key: "now",
+          title: "What's coming out now",
+          note: "Placeholder for the current books.",
+          entries: [{ title: "Demo Current Series" }],
+        },
+        {
+          _key: "standalone",
+          title: "Standalone picks",
+          entries: [{ title: "Demo One-off" }, { title: "Demo Mini" }],
+        },
+      ],
+    },
   };
   const data = await fetchList<HomeData>(
     q.HOME_QUERY,
     {},
-    { hero: [], latest: [], comics: [], features: [], categories: [], startHere: null },
+    { hero: [], latest: [], comics: [], features: [], startHere: null },
     demoHome,
     ["article", "category", "readingOrder", "comicIssue"],
   );

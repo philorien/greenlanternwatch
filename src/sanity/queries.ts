@@ -100,10 +100,14 @@ export const HOME_QUERY = defineQuery(/* groq */ `{
   "features": *[_type == "article" && defined(slug.current)
       && category._ref in *[_type == "category" && slug.current == "features"]._id]
     | order(publishedAt desc)[0...3]{ ${articleSummary} },
-  "categories": *[_type == "category" && defined(slug.current)]
-    | order(order asc){ _id, title, "slug": slug.current, description },
   "startHere": *[_type == "readingOrder" && audience == "new-reader"]
-    | order(order asc)[0]{ title, "slug": slug.current, tagline }
+    | order(order asc)[0]{
+      title, "slug": slug.current, tagline,
+      sections[]{
+        _key, title, note,
+        "entries": entries[0...3]{ title, "arcTitle": arc->title, cover { asset, alt } }
+      }
+    }
 }`);
 
 export const NEWS_QUERY = defineQuery(/* groq */ `

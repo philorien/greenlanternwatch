@@ -9,10 +9,10 @@ import type {
   ReadingOrderSummary,
   StoryArcSummary,
 } from "@/sanity/types";
+import { categoryLabel } from "@/lib/labels";
 import { CorpsSymbol } from "./Logo";
 import { SpectrumDot } from "./ui";
 import { Thumb } from "./Thumb";
-import { TimeAgo } from "./TimeAgo";
 
 export function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -65,7 +65,9 @@ export function ArticleCard({ article }: { article: ArticleSummary }) {
         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
       />
       <div className="flex flex-1 flex-col gap-2 p-4">
-        {article.category ? <CategoryLabel>{article.category.title}</CategoryLabel> : null}
+        {article.category ? (
+          <CategoryLabel>{categoryLabel(article.category) ?? article.category.title}</CategoryLabel>
+        ) : null}
         <h3 className="font-display text-lg font-bold leading-snug transition-colors group-hover:text-glow">
           {article.title}
         </h3>
@@ -112,30 +114,6 @@ export function ExplainerCard({
               .join("  •  ")}
           </p>
         </div>
-      </div>
-    </Link>
-  );
-}
-
-/** Compact row used in the Latest News sidebar. */
-export function NewsRow({ article }: { article: ArticleSummary }) {
-  return (
-    <Link href={`/news/${article.slug}`} className="group flex gap-3">
-      <Thumb
-        image={article.mainImage}
-        aspect="aspect-square"
-        className="w-16 shrink-0 rounded-md"
-        sizes="64px"
-        width={160}
-      />
-      <div className="min-w-0">
-        {article.category ? <CategoryLabel>{article.category.title}</CategoryLabel> : null}
-        <p className="font-display text-sm font-bold leading-snug transition-colors group-hover:text-glow">
-          {article.title}
-        </p>
-        <p className="mt-1 text-xs text-muted">
-          <TimeAgo iso={article.publishedAt} fallback={formatDate(article.publishedAt)} />
-        </p>
       </div>
     </Link>
   );

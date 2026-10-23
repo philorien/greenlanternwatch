@@ -212,13 +212,26 @@ export type Corps = CorpsSummary & {
   members?: CharacterSummary[];
 };
 
+export type StartPath = {
+  _key: string;
+  title: string;
+  note?: string;
+  entries?: { title: string; arcTitle?: string; cover?: SanityImage }[];
+};
+
+export type StartHere = {
+  title: string;
+  slug: string;
+  tagline?: string;
+  sections?: StartPath[];
+};
+
 export type HomeData = {
   hero: ArticleSummary[];
   latest: ArticleSummary[];
   comics: ComicIssue[];
   features: ArticleSummary[];
-  categories: CategoryItem[];
-  startHere: { title: string; slug: string; tagline?: string } | null;
+  startHere: StartHere | null;
 };
 
 export type ComicsHubData = {
