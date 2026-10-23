@@ -10,7 +10,7 @@
 import { buildReadingOrder } from "./reading-order-build.mjs";
 
 const CBL_URL =
-  "https://github.com/philorien/CBL-ReadingLists/tree/green-lantern-modern-lists/DC/Characters/Green%20Lantern/Modern%20Green%20Lantern";
+  "https://github.com/DieselTech/CBL-ReadingLists/tree/main/DC/Characters/Green%20Lantern/Modern%20Green%20Lantern";
 const COMMUNITY_ORDER_URL =
   "https://www.reddit.com/r/Greenlantern/comments/lcq6zv/an_updated_complete_green_lantern_reading_order/";
 
@@ -51,6 +51,7 @@ const orders = [
         note: "Geoff Johns' run, from Hal Jordan's return to the end of his New 52 issues.",
         lines: `
           GL: Rebirth (2004) #1-6 @green-lantern-rebirth | Start here, then read the Geoff Johns era and the first part of the New 52 order straight through to Green Lantern (2011) #20.
+          GL (2005) #1 | Hal's new ongoing series, by Geoff Johns and Carlos Pacheco, picks up straight after Rebirth.
         `,
       },
       {

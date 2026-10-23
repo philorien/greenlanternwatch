@@ -11,6 +11,9 @@
 
 import { buildReadingOrder } from "./reading-order-build.mjs";
 
+const KYLE_CBL_URL =
+  "https://github.com/DieselTech/CBL-ReadingLists/tree/main/DC/Characters/Green%20Lantern/Kyle%20Rayner";
+
 const VOLUME_YEAR_NOTE =
   "The year in parentheses is the year the series launched, which tells the different Green Lantern volumes apart.";
 
@@ -34,6 +37,8 @@ const orders = [
       "- Emerald Twilight is the one exception. It's Hal Jordan's story, but it's where Kyle gets the ring.",
       VOLUME_YEAR_NOTE,
       "Released issues only, as of October 14, 2026.",
+      "## Reading list for comic servers",
+      `If you use Kavita, Komga, ComicRack or another comic server, there's a CBL reading list file for this guide with all 317 issues in order. Every issue's ComicVine ID was checked against the ComicVine API, so it should match cleanly. **[Get the Kyle Rayner CBL file](${KYLE_CBL_URL})**.`,
     ],
     sections: [
       {
