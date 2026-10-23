@@ -1,8 +1,11 @@
 // Shared ComicVine API access. Reads comicvine_api_key from .env.local.
 
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-process.loadEnvFile(fileURLToPath(new URL("../../.env.local", import.meta.url)));
+// CI passes the key as an environment variable instead of a file.
+const envFile = fileURLToPath(new URL("../../.env.local", import.meta.url));
+if (existsSync(envFile)) process.loadEnvFile(envFile);
 const apiKey = process.env.comicvine_api_key;
 if (!apiKey) throw new Error("Set comicvine_api_key in .env.local");
 

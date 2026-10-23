@@ -1,0 +1,55 @@
+name: Sync latest comics
+
+# New issues release on Wednesdays. GitHub cron is UTC, so each Eastern time has
+# an EDT and an EST entry; the guard step skips the one that isn't 8am/8pm Eastern.
+on:
+  schedule:
+    - cron: "0 12 * * 3"
+    - cron: "0 13 * * 3"
+    - cron: "0 0 * * 4"
+    - cron: "0 1 * * 4"
+  workflow_dispatch:
+
+concurrency: sync-comics
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check Eastern time
+        id: guard
+        run: |
+          now=$(TZ=America/New_York date +"%u %H")
+          echo "Eastern day/hour: $now"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$now" = "3 08" ] || [ "$now" = "3 20" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.run == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.run == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/cache@v4
+        if: steps.guard.outputs.run == 'true'
+        with:
+          path: scripts/.cache/comicvine
+          key: comicvine-credits-${{ github.run_id }}
+          restore-keys: comicvine-credits-
+
+      - run: npm ci
+        if: steps.guard.outputs.run == 'true'
+
+      - name: Sync from ComicVine
+        if: steps.guard.outputs.run == 'true'
+        run: npx sanity exec scripts/comicvine/latest.mjs --with-user-token
+        env:
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          comicvine_api_key: ${{ secrets.COMICVINE_API_KEY }}
