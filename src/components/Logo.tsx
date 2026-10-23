@@ -1,15 +1,15 @@
 import Image from "next/image";
 import type { SpectrumColor } from "@/sanity/types";
 
-/** The Green Lantern Corps symbol. */
+/** The Green Lantern emblem on its own. */
 export function LogoMark({ className = "size-10" }: { className?: string }) {
   return (
     <Image
-      src="/gl-logo.webp"
+      src="/green-lantern-emblem.svg"
       alt=""
       aria-hidden="true"
-      width={800}
-      height={800}
+      width={400}
+      height={400}
       className={`object-contain ${className}`}
     />
   );

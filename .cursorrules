@@ -22,7 +22,7 @@ The job: keep up with Green Lantern across comics, TV and film, and find the rig
 - **Theme:** Dark only. `color-scheme: dark`.
 - **Color tokens** (`src/app/globals.css`): ink `#030c09` background, surfaces `#071611` and `#0b1f17`, line `#143527`, text `#e8f4ed`, muted `#8aa89a`, glow `#22b34e` with glow-dim `#188138`. Each Corps has a spectrum color via `data-spectrum`, used only in Corps and character contexts.
 - **Typography:** Archivo (variable, normal width) for display, with Black (900) for large headings and lighter weights for small UI text. Inter for body copy.
-- **Brand assets:** Green Lantern Watch logos (`SiteLogo`: long, short and full stacked), the Corps symbols (`CorpsSymbol`), series wordmarks (`Wordmark`) and the favicon in `src/app/icon.png`.
+- **Brand assets:** Green Lantern Watch logos (`SiteLogo`: long, short and full stacked), the Corps symbols (`CorpsSymbol`), series wordmarks (`Wordmark`) and the Green Lantern emblem (`public/green-lantern-emblem.svg`, used by `LogoMark` and the favicons in `src/app/icon.svg`, `icon.png` and `apple-icon.png`).
 - **DC branding:** The DC logo and DC trade dress (such as the DC Universe corner box) may appear only as decoration inside comics content. Never use them in the header, footer, favicon or site identity, and never in a way that suggests the site is official. The unofficial fan site disclaimer stays in the footer.
 
 ### Design Principles
